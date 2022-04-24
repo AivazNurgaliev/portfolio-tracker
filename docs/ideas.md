@@ -5,3 +5,5 @@
 
 ### Идеи:
 /// пишите идеи тут
+
+Встроенные прогнозы от ЦБ и других аналитиков на различные валюты - <a href="https://github.com/vaempunk">vaempunk</a>, <a href="https://github.com/bkmz007">bkmz007</a>
