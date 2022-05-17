@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title>tracker</title>
+    <style>
+        .inline {
+            display: inline;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <a href="/overview">Overview</a>
+        <a href="/home" sec:authorize="isAuthenticated()">Home</a>
+        <a href="/login" sec:authorize="!isAuthenticated()">Login</a>
+        <a href="/register" sec:authorize="!isAuthenticated()">Registration</a>
+
+        <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
+            <input type="submit" value="Log out" />
+        </form>
+    </nav>
+
+    <main>
+        <h2>Home page (access = authorized)</h2>
+    </main>
+</body>
+
+</html>

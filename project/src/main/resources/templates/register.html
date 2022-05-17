@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title>tracker</title>
+</head>
+
+<body>
+    <nav>
+        <a href="/overview">Overview</a>
+        <a href="/home" sec:authorize="isAuthenticated()">Home</a>
+        <a href="/login" sec:authorize="!isAuthenticated()">Login</a>
+        <a href="/register" sec:authorize="!isAuthenticated()">Registration</a>
+    </nav>
+
+    <main>
+        <h2>Registration page</h2>
+    </main>
+</body>
+
+</html>
