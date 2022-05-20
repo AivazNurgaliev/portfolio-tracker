@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title>tracker</title>
+    <!--Google Captcha-->
+    <script
+        src="https://www.google.com/recaptcha/enterprise.js" async defer></script>
+</head>
+
+<body>
+    <nav>
+        <a href="/overview">Overview</a>
+        <a href="/home" sec:authorize="isAuthenticated()">Home</a>
+        <a href="/login" sec:authorize="!isAuthenticated()">Login</a>
+        <a href="/register" sec:authorize="!isAuthenticated()">Registration</a>
+    </nav>
+
+    <main>
+        <h2>Login page</h2>
+
+        <form th:action="@{/login}" method="post">
+            <div>
+                <label for="username">Username/email:</label>
+                <input type="text" id="username" name="username" />
+            </div>
+
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" />
+            </div>
+
+            <div class="g-recaptcha" data-sitekey="6LfTE_cfAAAAAMD_klpw0pHcOq2cGfnAGdtQ9yNC" data-callback="enableButton">
+            </div>
+
+            <div>
+                <input id="submit-button" type="submit" value="Log in" disabled>
+            </div>
+        </form>
+
+        <script type="text/javascript">
+            function enableButton() {
+                const submitButton = document.getElementById('submit-button');
+                submitButton.removeAttribute('disabled');
+            }
+        </script>
+
+        <div th:if="${param.error}">
+            Invalid username or password
+        </div>
+
+        <div th:if="${param.logout}">
+            You have been logged out
+        </div>
+
+        <div>
+            <a href="/restore">Forgot password</a>
+        </div>
+    </main>
+</body>
+
+</html>
