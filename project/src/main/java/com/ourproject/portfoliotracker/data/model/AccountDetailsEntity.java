@@ -18,9 +18,9 @@ public class AccountDetailsEntity {
     private Timestamp subscriptionStartDate;
     @Column(name = "subscription_end_date", nullable = true)
     private Timestamp subscriptionEndDate;
-    @Column(name = "show_currency1", nullable = true, length = 2)
+    @Column(name = "show_currency1", nullable = true, length = 2, columnDefinition = "bpchar")
     private String showCurrency1;
-    @Column(name = "show_currency2", nullable = true, length = 2)
+    @Column(name = "show_currency2", nullable = true, length = 2, columnDefinition = "bpchar")
     private String showCurrency2;
     @OneToOne
     @JoinColumn(name = "account_id", referencedColumnName = "account_id", nullable = false)

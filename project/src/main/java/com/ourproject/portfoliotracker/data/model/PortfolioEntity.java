@@ -16,7 +16,7 @@ public class PortfolioEntity {
     @Column(name = "description", nullable = true, length = 256)
     private String description;
     @ManyToOne
-    @JoinColumn(name = "account_fk", referencedColumnName = "account_id", nullable = false)
+    @JoinColumn(name = "account_id", referencedColumnName = "account_id", nullable = false, insertable = false, updatable = false)
     private AccountEntity accountByAccountId;
 
     public int getAccountId() {

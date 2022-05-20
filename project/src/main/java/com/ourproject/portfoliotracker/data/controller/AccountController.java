@@ -9,7 +9,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/account")
 public class AccountController {
-    // FIXME: 18.05.2022 если что поменять на json
+
     private final AccountService accountService;
 
     public AccountController(AccountService accountService) {
@@ -22,7 +22,7 @@ public class AccountController {
         return accountService.addAccount(accountToAdd);
     }
 
-    @GetMapping
+    @GetMapping("/get")
     public List<AccountEntity> getAllAccounts() {
         //List<AccountEntity> accounts = accountService.getAccounts();
         return accountService.getAccounts();

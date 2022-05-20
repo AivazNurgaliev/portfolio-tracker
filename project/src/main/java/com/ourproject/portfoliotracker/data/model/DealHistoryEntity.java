@@ -34,10 +34,10 @@ public class DealHistoryEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "deal_type", nullable = false)
     private DealType dealType;
-    @Column(name = "currency", nullable = false, length = 2)
+    @Column(name = "currency", nullable = false, length = 2, columnDefinition = "bpchar")
     private String currency;
     @ManyToOne
-    @JoinColumn(name = "account_fk", referencedColumnName = "account_id", nullable = false)
+    @JoinColumn(name = "account_id", referencedColumnName = "account_id", nullable = false, insertable = false, updatable = false)
     private AccountEntity accountByAccountId;
 
     public int getAccountId() {

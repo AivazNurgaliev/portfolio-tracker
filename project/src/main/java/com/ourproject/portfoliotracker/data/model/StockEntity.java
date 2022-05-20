@@ -16,7 +16,7 @@ public class StockEntity {
     @Column(name = "amount", nullable = false)
     private int amount;
     @ManyToOne
-    @JoinColumn(name = "portfolio_fk", referencedColumnName = "portfolio_id", nullable = false)
+    @JoinColumn(name = "portfolio_id", referencedColumnName = "portfolio_id", nullable = false, insertable = false, updatable = false)
     private PortfolioEntity portfolioByPortfolioId;
 
     public int getPortfolioId() {
