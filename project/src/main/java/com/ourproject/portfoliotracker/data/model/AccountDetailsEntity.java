@@ -1,7 +1,5 @@
 package com.ourproject.portfoliotracker.data.model;
 
-import com.ourproject.portfoliotracker.data.model.dto.AccountDetailsDTO;
-
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -27,16 +25,6 @@ public class AccountDetailsEntity {
     @OneToOne
     @JoinColumn(name = "account_id", referencedColumnName = "account_id", nullable = false)
     private AccountEntity accountByAccountId;
-
-    public static AccountDetailsEntity from(AccountDetailsDTO accountDetailsDTO) {
-        AccountDetailsEntity accountDetails = new AccountDetailsEntity();
-        accountDetails.setLastLoginDate(accountDetailsDTO.getLastLoginDate());
-        accountDetails.setSubscriptionStartDate(accountDetailsDTO.getSubscriptionStartDate());
-        accountDetails.setSubscriptionEndDate(accountDetailsDTO.getSubscriptionEndDate());
-        accountDetails.setShowCurrency1(accountDetailsDTO.getShowCurrency1());
-        accountDetails.setShowCurrency2(accountDetailsDTO.getShowCurrency2());
-        return accountDetails;
-    }
 
     public int getAccountId() {
         return accountId;

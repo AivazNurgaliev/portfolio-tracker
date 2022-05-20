@@ -1,14 +1,10 @@
 package com.ourproject.portfoliotracker.data.controller;
 
 import com.ourproject.portfoliotracker.data.model.AccountEntity;
-import com.ourproject.portfoliotracker.data.model.dto.AccountDTO;
 import com.ourproject.portfoliotracker.data.service.AccountService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/account")
@@ -21,63 +17,61 @@ public class AccountController {
     }
     
     @PostMapping
-    public ResponseEntity<AccountDTO> addAccount(@RequestBody final AccountDTO accountDTO) {
-        AccountEntity account = accountService.addAccount(AccountEntity.from(accountDTO));
-        return new ResponseEntity<>(AccountDTO.from(account), HttpStatus.OK);
+    public AccountEntity addAccount(@RequestBody final AccountEntity accountToAdd) {
+        //AccountEntity account = accountService.addAccount(accountToAdd);
+        return accountService.addAccount(accountToAdd);
     }
 
     @GetMapping
-    public ResponseEntity<List<AccountDTO>> getAllAccounts() {
-        List<AccountEntity> accounts = accountService.getAccounts();
-        List<AccountDTO> accountsDTO = accounts.stream()
-                .map(AccountDTO::from).collect(Collectors.toList());
-        return new ResponseEntity<>(accountsDTO, HttpStatus.OK);
+    public List<AccountEntity> getAllAccounts() {
+        //List<AccountEntity> accounts = accountService.getAccounts();
+        return accountService.getAccounts();
     }
 
     @GetMapping(value = "{id}")
-    public ResponseEntity<AccountDTO> getAccount(@PathVariable final Integer id) {
-        AccountEntity account = accountService.getAccount(id);
-        return new ResponseEntity<>(AccountDTO.from(account), HttpStatus.OK);
+    public AccountEntity getAccount(@PathVariable final Integer id) {
+        //AccountEntity account = accountService.getAccount(id);
+        return accountService.getAccount(id);
     }
 
     @DeleteMapping(value = "{id}")
-    public ResponseEntity<AccountDTO> deleteAccount(@PathVariable final Integer id) {
-        AccountEntity account = accountService.deleteAccount(id);
-        return new ResponseEntity<>(AccountDTO.from(account), HttpStatus.OK);
+    public AccountEntity deleteAccount(@PathVariable final Integer id) {
+        //AccountEntity account = accountService.deleteAccount(id);
+        return accountService.deleteAccount(id);
     }
 
     @PutMapping(value = "{id}")
-    public ResponseEntity<AccountDTO> editAccount(@PathVariable final Integer id,
-                                                  @RequestBody final AccountDTO accountDTO) {
-        AccountEntity account = accountService.editAccount(id, AccountEntity.from(accountDTO));
-        return new ResponseEntity<>(AccountDTO.from(account), HttpStatus.OK);
+    public AccountEntity editAccount(@PathVariable final Integer id,
+                                                  @RequestBody final AccountEntity accountRetrieve) {
+        //AccountEntity account = accountService.editAccount(id, accountRetrieve);
+        return accountService.editAccount(id, accountRetrieve);
     }
 
     @PostMapping(value = "{accountId}/dealHistory/{dealId}/add")
-    public ResponseEntity<AccountDTO> addDealToAccount(@PathVariable final Integer accountId,
+    public AccountEntity addDealToAccount(@PathVariable final Integer accountId,
                                                        @PathVariable final Integer dealId) {
-        AccountEntity account = accountService.addDealHistory(accountId, dealId);
-        return new ResponseEntity<>(AccountDTO.from(account), HttpStatus.OK);
+        //AccountEntity account = accountService.addDealHistory(accountId, dealId);
+        return accountService.addDealHistory(accountId, dealId);
     }
 
     @DeleteMapping(value = "{accountId}/dealHistory/{dealId}/add")
-    public ResponseEntity<AccountDTO> removeDealToAccount(@PathVariable final Integer accountId,
+    public AccountEntity removeDealToAccount(@PathVariable final Integer accountId,
                                                        @PathVariable final Integer dealId) {
-        AccountEntity account = accountService.removeDealHistory(accountId, dealId);
-        return new ResponseEntity<>(AccountDTO.from(account), HttpStatus.OK);
+        //AccountEntity account = accountService.removeDealHistory(accountId, dealId);
+        return accountService.removeDealHistory(accountId, dealId);
     }
 
     @PostMapping(value = "{accountId}/dealHistory/{portfolioId}/add")
-    public ResponseEntity<AccountDTO> addPortfolioToAccount(@PathVariable final Integer accountId,
+    public AccountEntity addPortfolioToAccount(@PathVariable final Integer accountId,
                                                        @PathVariable final Integer portfolioId) {
-        AccountEntity account = accountService.addPortfolio(accountId, portfolioId);
-        return new ResponseEntity<>(AccountDTO.from(account), HttpStatus.OK);
+        //AccountEntity account = accountService.addPortfolio(accountId, portfolioId);
+        return accountService.addPortfolio(accountId, portfolioId);
     }
 
     @DeleteMapping(value = "{accountId}/dealHistory/{portfolioId}/add")
-    public ResponseEntity<AccountDTO> removePortfolioToAccount(@PathVariable final Integer accountId,
+    public AccountEntity removePortfolioToAccount(@PathVariable final Integer accountId,
                                                           @PathVariable final Integer portfolioId) {
-        AccountEntity account = accountService.removePortfolio(accountId, portfolioId);
-        return new ResponseEntity<>(AccountDTO.from(account), HttpStatus.OK);
+        //AccountEntity account = accountService.removePortfolio(accountId, portfolioId);
+        return accountService.removePortfolio(accountId, portfolioId);
     }
 }

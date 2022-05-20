@@ -1,7 +1,5 @@
 package com.ourproject.portfoliotracker.data.model;
 
-import com.ourproject.portfoliotracker.data.model.dto.AccountDTO;
-
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -37,18 +35,6 @@ public class AccountEntity {
             cascade = CascadeType.ALL
     )
     private List<PortfolioEntity> portfoliosByAccountId = new ArrayList<>();
-
-    public static AccountEntity from(AccountDTO accountDTO) {
-        AccountEntity account = new AccountEntity();
-        account.setUserName(accountDTO.getUserName());
-        account.setPass(accountDTO.getPass());
-        account.setEmail(accountDTO.getEmail());
-        account.setRegistrationDate(accountDTO.getRegistrationDate());
-        account.setDealHistoriesByAccountId(accountDTO.getDealHistories());
-        account.setPortfoliosByAccountId(accountDTO.getPortfolios());
-
-        return account;
-    }
 
     public int getAccountId() {
         return accountId;
