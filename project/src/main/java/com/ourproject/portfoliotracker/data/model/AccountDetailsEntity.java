@@ -1,5 +1,7 @@
 package com.ourproject.portfoliotracker.data.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -24,6 +26,7 @@ public class AccountDetailsEntity {
     private String showCurrency2;
     @OneToOne
     @JoinColumn(name = "account_id", referencedColumnName = "account_id", nullable = false)
+    @JsonIgnore
     private AccountEntity accountByAccountId;
 
     public int getAccountId() {
