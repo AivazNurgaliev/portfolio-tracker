@@ -1,4 +1,7 @@
-package com.ourproject.portfoliotracker.data.model;
+package com.ourproject.portfoliotracker.data.portfolio;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ourproject.portfoliotracker.data.account.AccountEntity;
 
 import javax.persistence.*;
 
@@ -11,12 +14,13 @@ public class PortfolioEntity {
     @Id
     @Column(name = "portfolio_id", nullable = false)
     private int portfolioId;
-    @Column(name = "name", unique = true, nullable = false, length = 64)
+    @Column(name = "name", nullable = false, length = 64)
     private String name;
     @Column(name = "description", nullable = true, length = 256)
     private String description;
     @ManyToOne
     @JoinColumn(name = "account_id", referencedColumnName = "account_id", nullable = false, insertable = false, updatable = false)
+    @JsonIgnore
     private AccountEntity accountByAccountId;
 
     public int getAccountId() {

@@ -1,7 +1,5 @@
-package com.ourproject.portfoliotracker.data.service;
+package com.ourproject.portfoliotracker.data.stock;
 
-import com.ourproject.portfoliotracker.data.model.StockEntity;
-import com.ourproject.portfoliotracker.data.repository.StockRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

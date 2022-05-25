@@ -1,6 +1,8 @@
-package com.ourproject.portfoliotracker.data.model;
+package com.ourproject.portfoliotracker.data.dealHistory;
 
-import com.ourproject.portfoliotracker.data.model.utils.DealType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ourproject.portfoliotracker.data.account.AccountEntity;
+import com.ourproject.portfoliotracker.data.dealHistory.utils.DealType;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -38,6 +40,7 @@ public class DealHistoryEntity {
     private String currency;
     @ManyToOne
     @JoinColumn(name = "account_id", referencedColumnName = "account_id", nullable = false, insertable = false, updatable = false)
+    @JsonIgnore
     private AccountEntity accountByAccountId;
 
     public int getAccountId() {

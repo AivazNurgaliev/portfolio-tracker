@@ -1,4 +1,4 @@
-package com.ourproject.portfoliotracker.data.model.utils;
+package com.ourproject.portfoliotracker.data.dealHistory.utils;
 
 public enum DealType {
     BUY("BUY"),

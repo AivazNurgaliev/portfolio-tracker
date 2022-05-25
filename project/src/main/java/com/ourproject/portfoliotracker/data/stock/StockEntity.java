@@ -1,4 +1,7 @@
-package com.ourproject.portfoliotracker.data.model;
+package com.ourproject.portfoliotracker.data.stock;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ourproject.portfoliotracker.data.portfolio.PortfolioEntity;
 
 import javax.persistence.*;
 
@@ -17,6 +20,7 @@ public class StockEntity {
     private int amount;
     @ManyToOne
     @JoinColumn(name = "portfolio_id", referencedColumnName = "portfolio_id", nullable = false, insertable = false, updatable = false)
+    @JsonIgnore
     private PortfolioEntity portfolioByPortfolioId;
 
     public int getPortfolioId() {

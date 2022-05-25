@@ -1,4 +1,8 @@
-package com.ourproject.portfoliotracker.data.model;
+package com.ourproject.portfoliotracker.data.account;
+
+import com.ourproject.portfoliotracker.data.accountDetails.AccountDetailsEntity;
+import com.ourproject.portfoliotracker.data.dealHistory.DealHistoryEntity;
+import com.ourproject.portfoliotracker.data.portfolio.PortfolioEntity;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -35,6 +39,8 @@ public class AccountEntity {
             cascade = CascadeType.ALL
     )
     private List<PortfolioEntity> portfoliosByAccountId = new ArrayList<>();
+
+
 
     public int getAccountId() {
         return accountId;

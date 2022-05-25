@@ -1,4 +1,4 @@
-package com.ourproject.portfoliotracker.web.controllers;
+package com.ourproject.portfoliotracker.web;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;

@@ -1,4 +1,4 @@
-package com.ourproject.portfoliotracker.security.configuration;
+package com.ourproject.portfoliotracker.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +28,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(
                         "/", "/overview", "/register", "/restore")
                 .permitAll()
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
                 .and()
                 .formLogin()
                 .loginPage("/login")
@@ -38,7 +38,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .logout()
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout")
-                .deleteCookies("JSESSIONID").permitAll();
+                .deleteCookies("JSESSIONID").permitAll()
+                .and().cors().and().csrf().disable();
     }
 
     @Bean

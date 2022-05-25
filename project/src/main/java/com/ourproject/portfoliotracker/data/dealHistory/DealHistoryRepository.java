@@ -1,6 +1,6 @@
-package com.ourproject.portfoliotracker.data.repository;
+package com.ourproject.portfoliotracker.data.dealHistory;
 
-import com.ourproject.portfoliotracker.data.model.DealHistoryEntity;
+import com.ourproject.portfoliotracker.data.dealHistory.DealHistoryEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

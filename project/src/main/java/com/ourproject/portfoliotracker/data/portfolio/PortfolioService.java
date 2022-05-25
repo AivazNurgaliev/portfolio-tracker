@@ -1,7 +1,7 @@
-package com.ourproject.portfoliotracker.data.service;
+package com.ourproject.portfoliotracker.data.portfolio;
 
-import com.ourproject.portfoliotracker.data.model.PortfolioEntity;
-import com.ourproject.portfoliotracker.data.repository.PortfolioRepository;
+import com.ourproject.portfoliotracker.data.portfolio.PortfolioEntity;
+import com.ourproject.portfoliotracker.data.portfolio.PortfolioRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -32,25 +32,28 @@ public class PortfolioService {
     }
 
     //Getting a Portfolio by id
-    public PortfolioEntity getPorfolio(Integer id) {
-        return portfolioRepository.findById(id).orElseThrow(() ->
-                new RuntimeException("Error! Portfolio not found"));
+    public PortfolioEntity getPorfolio(Integer accountId, String name) {
+        PortfolioEntity portfolio = portfolioRepository.findByAccountIdAndName(accountId, name);
+        if (portfolio == null) {
+            throw new RuntimeException("Portfolio of id " + accountId + " and name " + name + " not found");
+        }
+        return portfolio;
     }
 
     //Deleting a Portfolio by id
-    public PortfolioEntity deletePorfolio(Integer id) {
+/*    public PortfolioEntity deletePorfolio(Integer id) {
         //Validating, if the object does not exist it will throw an error
         PortfolioEntity portfolio = getPorfolio(id);
         portfolioRepository.delete(portfolio);
         return portfolio;
-    }
+    }*/
 
-    @Transactional
+/*    @Transactional
     public PortfolioEntity editPorfolio(Integer id,PortfolioEntity portfolioObj) {
         PortfolioEntity portfolio = getPorfolio(id);
         portfolio.setAccountId(portfolioObj.getAccountId());
         portfolio.setName(portfolioObj.getName());
         portfolio.setDescription(portfolioObj.getDescription());
         return portfolio;
-    }
+    }*/
 }
