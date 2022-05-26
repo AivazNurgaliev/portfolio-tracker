@@ -1,30 +1,21 @@
 package com.ourproject.portfoliotracker.data.account;
 
-import com.ourproject.portfoliotracker.data.dealHistory.DealHistoryEntity;
-import com.ourproject.portfoliotracker.data.portfolio.PortfolioEntity;
 import com.ourproject.portfoliotracker.data.accountDetails.AccountDetailsService;
 import com.ourproject.portfoliotracker.data.dealHistory.DealHistoryService;
 import com.ourproject.portfoliotracker.data.portfolio.PortfolioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 public class AccountService {
 
     private final AccountRepository accountRepository;
-    private final AccountDetailsService accountDetailsService;
-    private final DealHistoryService dealHistoryService;
-    private final PortfolioService portfolioService;
 
     @Autowired
     public AccountService(AccountRepository accountRepository,
@@ -32,9 +23,6 @@ public class AccountService {
                           DealHistoryService dealHistoryService,
                           PortfolioService portfolioService) {
         this.accountRepository = accountRepository;
-        this.accountDetailsService = accountDetailsService;
-        this.dealHistoryService = dealHistoryService;
-        this.portfolioService = portfolioService;
     }
 
 
@@ -68,6 +56,25 @@ public class AccountService {
         AccountEntity account = accountRepository.findByUserName(userName);
         if (account == null) {
             throw new UsernameNotFoundException("User " + userName + " not found");
+        }
+        System.out.println("User " + account.toString() + " not found");
+        AccountDSO accountDSO = new AccountDSO();
+        accountDSO.setEmail(account.getEmail());
+        accountDSO.setRegistrationDate(account.getRegistrationDate());
+        accountDSO.setUserName(account.getUserName());
+        accountDSO.setLastLoginDate(account.getAccountDetailsByAccountId().getLastLoginDate());
+        accountDSO.setShowCurrency1(account.getAccountDetailsByAccountId().getShowCurrency1());
+        accountDSO.setShowCurrency2(account.getAccountDetailsByAccountId().getShowCurrency2());
+        accountDSO.setSubscriptionStartDate(account.getAccountDetailsByAccountId().getSubscriptionStartDate());
+        accountDSO.setSubscriptionEndDate(account.getAccountDetailsByAccountId().getSubscriptionEndDate());
+
+        return accountDSO;
+    }
+
+    public AccountDSO getAccountByEmail(String email) {
+        AccountEntity account = accountRepository.findByEmail(email);
+        if (account == null) {
+            throw new UsernameNotFoundException("User with email " + email + " not found");
         }
         AccountDSO accountDSO = new AccountDSO();
         accountDSO.setEmail(account.getEmail());
@@ -148,6 +155,16 @@ public class AccountService {
         }
         account.setPass(encodedPass);
         return account;
+    }
+
+    public String getPassword(String userName) {
+        AccountEntity account = accountRepository.findByUserName(userName);
+        if (account == null) {
+            throw new UsernameNotFoundException("User " + userName + " not found");
+        }
+
+        String password = account.getPass();
+        return password;
     }
 
 /*    @Transactional

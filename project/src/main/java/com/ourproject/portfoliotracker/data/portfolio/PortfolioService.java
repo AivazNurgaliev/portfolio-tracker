@@ -1,10 +1,7 @@
 package com.ourproject.portfoliotracker.data.portfolio;
 
-import com.ourproject.portfoliotracker.data.portfolio.PortfolioEntity;
-import com.ourproject.portfoliotracker.data.portfolio.PortfolioRepository;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;

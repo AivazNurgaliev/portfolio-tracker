@@ -1,7 +1,5 @@
 package com.ourproject.portfoliotracker.data.dealHistory;
 
-import com.ourproject.portfoliotracker.data.dealHistory.DealHistoryEntity;
-import com.ourproject.portfoliotracker.data.dealHistory.DealHistoryRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
