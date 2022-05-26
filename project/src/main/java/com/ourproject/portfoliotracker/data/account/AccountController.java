@@ -63,7 +63,7 @@ public class AccountController {
 
     @PutMapping("/password")
     public AccountEntity putPassword(Authentication authentication,
-                                                  @RequestBody String newPassword) {
+                                     @RequestBody String newPassword) {
         if (authentication == null) {
             return null;
         }
@@ -74,7 +74,7 @@ public class AccountController {
 
     @PutMapping("/username")
     public AccountEntity putUserName(Authentication authentication,
-                                      @RequestBody String newUserName) {
+                                     @RequestBody String newUserName) {
         if (authentication == null) {
             return null;
         }
@@ -85,7 +85,7 @@ public class AccountController {
 
     @PutMapping("/email")
     public AccountEntity putEmail(Authentication authentication,
-                                     @RequestBody String newEmail) {
+                                  @RequestBody String newEmail) {
         if (authentication == null) {
             return null;
         }

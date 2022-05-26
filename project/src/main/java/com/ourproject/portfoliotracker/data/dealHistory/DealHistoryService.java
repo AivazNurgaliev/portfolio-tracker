@@ -1,51 +1,73 @@
 package com.ourproject.portfoliotracker.data.dealHistory;
 
-import com.ourproject.portfoliotracker.data.dealHistory.DealHistoryEntity;
-import com.ourproject.portfoliotracker.data.dealHistory.DealHistoryRepository;
+import com.ourproject.portfoliotracker.data.portfolio.PortfolioDTO;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import java.lang.reflect.Type;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 public class DealHistoryService {
 
     private final DealHistoryRepository dealHistoryRepository;
 
+    @Autowired
     public DealHistoryService(DealHistoryRepository dealHistoryRepository) {
         this.dealHistoryRepository = dealHistoryRepository;
     }
 
-    //Creating an DealHistory object
-    //Returning persisted object
-    public DealHistoryEntity addDealHistory(DealHistoryEntity dealHistory) {
+    public DealHistoryEntity addDealHistory(DealHistoryDTO dealHistoryDTO) {
+        DealHistoryEntity dealHistory = new DealHistoryEntity();
+        dealHistory.setTicker(dealHistoryDTO.getTicker());
+        dealHistory.setAmount(dealHistoryDTO.getAmount());
+        dealHistory.setStockPrice(dealHistoryDTO.getStockPrice());
+        dealHistory.setDealDate(dealHistoryDTO.getDealDate());
+        dealHistory.setDealType(dealHistoryDTO.getDealType());
+        dealHistory.setCurrency(dealHistoryDTO.getCurrency());
+
         return dealHistoryRepository.save(dealHistory);
     }
 
-    //Returning a List of deal history
-    public List<DealHistoryEntity> getAllDealHistory() {
+/*    public List<DealHistoryEntity> getAllDealHistory() {
         return StreamSupport
                 .stream(dealHistoryRepository.findAll().spliterator(), false)
                 .collect(Collectors.toList());
-    }
+    }*/
 
-    //Getting a DealHistory by id
-    public DealHistoryEntity getDealHistory(Integer id) {
+/*    public DealHistoryEntity getDealHistory(Integer id) {
         return dealHistoryRepository.findById(id).orElseThrow(() ->
                 new RuntimeException("Error! Deal History not found"));
+    }*/
+
+    public List<DealHistoryDTO> getFirst20Deals(Integer accountId, Integer pageId) {
+
+        List<DealHistoryEntity> dealHistoryEntities = dealHistoryRepository.findAllByAccountId(accountId);
+        if (dealHistoryEntities == null) {
+            throw new RuntimeException("deal History of user id: " + accountId + " not found");
+        }
+
+        ModelMapper modelMapper = new ModelMapper();
+        Type listType = new TypeToken<List<DealHistoryDTO>>(){}.getType();
+        List<DealHistoryDTO> dealHistoryDTOS = modelMapper.map(dealHistoryEntities, listType);
+
+        if (pageId < 1) {
+            throw new RuntimeException("pageId cannot be negative or zero: " + pageId);
+        }
+
+        return dealHistoryDTOS.subList(20 * (pageId - 1), 20 * pageId + 1)
+
     }
 
-    //Deleting a Deal History by id
-    public DealHistoryEntity deleteDealHistory(Integer id) {
-        //Validating, if the object does not exist it will throw an error
+  /*  public DealHistoryEntity deleteDealHistory(Integer id) {
         DealHistoryEntity dealHistory = getDealHistory(id);
         dealHistoryRepository.delete(dealHistory);
         return dealHistory;
     }
-
-    @Transactional
+*/
+ /*   @Transactional
     public DealHistoryEntity editDealHistory(Integer dealId, DealHistoryEntity dealHistoryObj) {
         //Validating, if the object does not exist it will throw an error
         DealHistoryEntity dealHistory = getDealHistory(dealId);
@@ -58,6 +80,6 @@ public class DealHistoryService {
         dealHistory.setCurrency(dealHistoryObj.getCurrency());
 
         return dealHistory;
-    }
+    }*/
 
 }

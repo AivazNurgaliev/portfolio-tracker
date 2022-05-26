@@ -37,7 +37,13 @@ public class AccountService {
         this.portfolioService = portfolioService;
     }
 
-
+    public Integer getUserId(String userName) {
+        AccountEntity account = accountRepository.findByUserName(userName);
+        if (account == null) {
+            throw new UsernameNotFoundException("User " + userName + " not found");
+        }
+        return account.getAccountId();
+    }
     //Creating an account object
     //Returning persisted object
 /*
