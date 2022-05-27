@@ -22,19 +22,10 @@ import java.util.stream.StreamSupport;
 public class AccountService {
 
     private final AccountRepository accountRepository;
-    private final AccountDetailsService accountDetailsService;
-    private final DealHistoryService dealHistoryService;
-    private final PortfolioService portfolioService;
 
     @Autowired
-    public AccountService(AccountRepository accountRepository,
-                          AccountDetailsService accountDetailsService,
-                          DealHistoryService dealHistoryService,
-                          PortfolioService portfolioService) {
+    public AccountService(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
-        this.accountDetailsService = accountDetailsService;
-        this.dealHistoryService = dealHistoryService;
-        this.portfolioService = portfolioService;
     }
 
     public Integer getUserId(String userName) {

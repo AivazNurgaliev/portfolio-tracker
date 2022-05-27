@@ -11,9 +11,5 @@ import java.util.List;
 @Repository
 public interface DealHistoryRepository extends JpaRepository<DealHistoryEntity, Integer> {
     public List<DealHistoryEntity> findAllByAccountId(Integer accountId);
-
-    // FIXME: 27.05.2022 throwing an error //cannot create a query
-    // FIXME: 27.05.2022 UnsatisfiedDependencyException
-
     public List<DealHistoryEntity> deleteByDealDate(Timestamp dealDate);
 }

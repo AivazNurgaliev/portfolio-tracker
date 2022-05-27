@@ -29,11 +29,14 @@ public class PortfolioService {
     }
 
     public Integer getPortfolioId(String userName, String portfolioName) {
-        /*AccountEntity account = accountRepository.findByUserName(userName);*/
+        AccountEntity account = accountRepository.findByUserName(userName);
+        if (account == null) {
+            throw new UsernameNotFoundException("User not found name: " + userName);
+        }
         Integer accountId = accountRepository.findByUserName(userName).getAccountId();
         PortfolioEntity portfolio = portfolioRepository.findByAccountIdAndName(accountId, portfolioName);
         if (portfolio == null) {
-            throw new UsernameNotFoundException("Portfolio " + portfolioName + " not found");
+            throw new RuntimeException("Portfolio " + portfolioName + " not found");
         }
         return portfolio.getPortfolioId();
     }
@@ -65,7 +68,7 @@ public class PortfolioService {
     }
 
     //Returning a List of all portfolios
- /*   public List<PortfolioEntity> getAllPorfolios() {
+ /*   public List<PortfolioEntity> getAllPortfolios() {
         return StreamSupport
                 .stream(portfolioRepository.findAll().spliterator(), false)
                 .collect(Collectors.toList());

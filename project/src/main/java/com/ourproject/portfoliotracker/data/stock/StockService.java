@@ -17,16 +17,10 @@ import java.util.List;
 public class StockService {
 
     private final StockRepository stockRepository;
-    private final AccountRepository accountRepository;
-    private final PortfolioRepository portfolioRepository;
 
     @Autowired
-    public StockService(StockRepository stockRepository,
-                        AccountRepository accountRepository,
-                        PortfolioRepository portfolioRepository) {
+    public StockService(StockRepository stockRepository) {
         this.stockRepository = stockRepository;
-        this.accountRepository = accountRepository;
-        this.portfolioRepository = portfolioRepository;
     }
 
     public StockEntity addStock(StockDTO stockDTO) {
@@ -75,14 +69,14 @@ public class StockService {
         return stockDTOS.subList(20 * (pageId - 1), 20 * pageId + 1);
     }
 
-    public List<StockEntity> deleteStocks(Integer portfolioId) {
+/*    public List<StockEntity> deleteStocks(Integer portfolioId) {
         List<StockEntity> stockEntities = stockRepository.findAllByPortfolioId(portfolioId);
         if (stockEntities == null) {
             throw new RuntimeException("Stocks of portfolio id: " + portfolioId + " not found");
         }
         stockRepository.deleteAllByPortfolioId(portfolioId);
         return stockEntities;
-    }
+    }*/
 
     public StockEntity deleteStock(Integer portfolioId, Integer stockId) {
         //Validating, if the object does not exist it will throw an error

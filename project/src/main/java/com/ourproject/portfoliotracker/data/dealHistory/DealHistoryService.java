@@ -62,7 +62,6 @@ public class DealHistoryService {
         return dealHistoryDTOS.subList(20 * (pageId - 1), 20 * pageId + 1);
     }
 
-    // FIXME: 27.05.2022 Обсудить имплементацию метода
     //dealType, 0 - chosen from List, 1 - all,
     public List<DealHistoryEntity> deleteDealHistory(Integer accountId,
                                                      List<Timestamp> dealDatesList,
