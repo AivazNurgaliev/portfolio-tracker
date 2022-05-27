@@ -83,22 +83,16 @@ public class StockService {
         return stockEntities;
     }
 
-    //Deleting a Stock by id
-    /*public StockEntity deleteStock(Integer id) {
+    public StockEntity deleteStock(Integer portfolioId, Integer stockId) {
         //Validating, if the object does not exist it will throw an error
-        StockEntity stock = getStock(id);
+        StockEntity stock = stockRepository.findByPortfolioIdAndStockId(portfolioId, stockId);
+        if (stock == null) {
+            throw new RuntimeException(
+                    "Stock of portfolio id: " + portfolioId + " and stock id: " + stockId +  " not found"
+            );
+        }
         stockRepository.delete(stock);
         return stock;
     }
-
-    @Transactional
-    public StockEntity editStock(Integer id, StockEntity stockObj) {
-        StockEntity stock = getStock(id);
-        stock.setPortfolioId(stockObj.getPortfolioId());
-        stock.setTicker(stockObj.getTicker());
-        stock.setAmount(stockObj.getAmount());
-
-        return stock;
-    }*/
 
 }

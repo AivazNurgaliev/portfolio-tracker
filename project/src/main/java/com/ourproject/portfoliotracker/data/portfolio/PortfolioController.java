@@ -23,7 +23,7 @@ public class PortfolioController {
         return portfolioService.addPortfolio(portfolioDTO);
     }
 
-    @GetMapping()
+    @GetMapping
     public PortfolioDTO getPortfolio(Authentication authentication,
                                      @RequestParam(name = "name") String name) {
         if (authentication == null) {

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Service
@@ -31,7 +32,7 @@ public class DealHistoryService {
         return dealHistoryRepository.save(dealHistory);
     }
 
-/*    public List<DealHistoryEntity> getAllDealHistory() {
+/*  public List<DealHistoryEntity> getAllDealHistory() {
         return StreamSupport
                 .stream(dealHistoryRepository.findAll().spliterator(), false)
                 .collect(Collectors.toList());
@@ -57,29 +58,24 @@ public class DealHistoryService {
             throw new RuntimeException("pageId cannot be negative or zero: " + pageId);
         }
 
-        return dealHistoryDTOS.subList(20 * (pageId - 1), 20 * pageId + 1)
-
+        return dealHistoryDTOS.subList(20 * (pageId - 1), 20 * pageId + 1);
     }
 
-  /*  public DealHistoryEntity deleteDealHistory(Integer id) {
-        DealHistoryEntity dealHistory = getDealHistory(id);
-        dealHistoryRepository.delete(dealHistory);
-        return dealHistory;
-    }
-*/
- /*   @Transactional
-    public DealHistoryEntity editDealHistory(Integer dealId, DealHistoryEntity dealHistoryObj) {
-        //Validating, if the object does not exist it will throw an error
-        DealHistoryEntity dealHistory = getDealHistory(dealId);
-        dealHistory.setAccountId(dealHistoryObj.getAccountId());
-        dealHistory.setTicker(dealHistoryObj.getTicker());
-        dealHistory.setAmount(dealHistoryObj.getAmount());
-        dealHistory.setStockPrice(dealHistoryObj.getStockPrice());
-        dealHistory.setDealDate(dealHistoryObj.getDealDate());
-        dealHistory.setDealType(dealHistoryObj.getDealType());
-        dealHistory.setCurrency(dealHistoryObj.getCurrency());
+    //dealType, 0 - chosen from List, 1 - all,
+    public List<DealHistoryEntity> deleteDealHistory(Integer accountId,
+                                                     List<Timestamp> dealDatesList,
+                                                     Boolean deleteAll) {
+        List<DealHistoryEntity> dealHistoryEntityList = dealHistoryRepository.findAllByAccountId(accountId);
+        if (dealHistoryEntityList == null) {
+            throw new RuntimeException("Deal History of user id: " + accountId + " does not exist");
+        }
+        if (deleteAll) {
+            dealHistoryRepository.deleteAll(dealHistoryEntityList);
+        } else {
+            dealHistoryRepository.deleteAllByDealDate(dealDatesList);
+        }
 
-        return dealHistory;
-    }*/
+        return dealHistoryEntityList;
+    }
 
 }
