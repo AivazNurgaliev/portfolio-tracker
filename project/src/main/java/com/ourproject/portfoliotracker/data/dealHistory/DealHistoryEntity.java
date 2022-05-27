@@ -3,7 +3,6 @@ package com.ourproject.portfoliotracker.data.dealHistory;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ourproject.portfoliotracker.data.account.AccountEntity;
 import com.ourproject.portfoliotracker.data.dealHistory.utils.DealType;
-
 import javax.persistence.*;
 import java.sql.Timestamp;
 
