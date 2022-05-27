@@ -22,19 +22,10 @@ import java.util.stream.StreamSupport;
 public class AccountService {
 
     private final AccountRepository accountRepository;
-    private final AccountDetailsService accountDetailsService;
-    private final DealHistoryService dealHistoryService;
-    private final PortfolioService portfolioService;
 
     @Autowired
-    public AccountService(AccountRepository accountRepository,
-                          AccountDetailsService accountDetailsService,
-                          DealHistoryService dealHistoryService,
-                          PortfolioService portfolioService) {
+    public AccountService(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
-        this.accountDetailsService = accountDetailsService;
-        this.dealHistoryService = dealHistoryService;
-        this.portfolioService = portfolioService;
     }
 
     public Integer getUserId(String userName) {
@@ -101,7 +92,6 @@ public class AccountService {
 
     //id - account to edit
     //accountObj - account that we use to edit object with certain id
-    // FIXME: 18.05.2022 обсудить насчет редактирования отдельных полей
     //get account entity
     //editAcc (accEnt a)
     //edit
@@ -164,7 +154,6 @@ public class AccountService {
         }
         Integer accountId = accountRepository.findByUserName(userName).getAccountId();
         DealHistoryEntity dealHistory = dealHistoryService.addDealHistory(dealHistoryToAdd);
-        // FIXME: 18.05.2022 возможно нужна проверка на то что есть уже такая запись
         account.addDealHistory(dealHistory);
         return account;
     }*/
@@ -185,7 +174,6 @@ public class AccountService {
             throw new UsernameNotFoundException("User " + userName + " not found");
         }
         PortfolioEntity portfolio = portfolioService.addPortfolio(portfolioToAdd);
-        // FIXME: 18.05.2022 возможно нужна проверка на то что есть уже такая запись
         account.addPortfolio(portfolio);
 
         return account;
