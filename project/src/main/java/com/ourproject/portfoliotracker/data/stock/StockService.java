@@ -19,6 +19,7 @@ public class StockService {
     private final StockRepository stockRepository;
     private final AccountRepository accountRepository;
     private final PortfolioRepository portfolioRepository;
+
     @Autowired
     public StockService(StockRepository stockRepository,
                         AccountRepository accountRepository,

@@ -1,10 +1,12 @@
 package com.ourproject.portfoliotracker.data.portfolio;
 
+import com.ourproject.portfoliotracker.data.account.AccountEntity;
 import com.ourproject.portfoliotracker.data.account.AccountRepository;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -24,6 +26,16 @@ public class PortfolioService {
     public PortfolioService(PortfolioRepository portfolioRepository, AccountRepository accountRepository) {
         this.portfolioRepository = portfolioRepository;
         this.accountRepository = accountRepository;
+    }
+
+    public Integer getPortfolioId(String userName, String portfolioName) {
+        /*AccountEntity account = accountRepository.findByUserName(userName);*/
+        Integer accountId = accountRepository.findByUserName(userName).getAccountId();
+        PortfolioEntity portfolio = portfolioRepository.findByAccountIdAndName(accountId, portfolioName);
+        if (portfolio == null) {
+            throw new UsernameNotFoundException("Portfolio " + portfolioName + " not found");
+        }
+        return portfolio.getPortfolioId();
     }
 
     public PortfolioEntity addPortfolio(PortfolioDTO portfolioDTO) {

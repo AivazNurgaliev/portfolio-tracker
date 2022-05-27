@@ -9,7 +9,6 @@ import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
 
-// FIXME: 18.05.2022 change data types
 @Entity
 @Table(name = "account_details", schema = "public", catalog = "d1nbjmf3706qof")
 public class AccountDetailsEntity {

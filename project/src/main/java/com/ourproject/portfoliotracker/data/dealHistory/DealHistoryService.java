@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -61,6 +62,7 @@ public class DealHistoryService {
         return dealHistoryDTOS.subList(20 * (pageId - 1), 20 * pageId + 1);
     }
 
+    // FIXME: 27.05.2022 Обсудить имплементацию метода
     //dealType, 0 - chosen from List, 1 - all,
     public List<DealHistoryEntity> deleteDealHistory(Integer accountId,
                                                      List<Timestamp> dealDatesList,
@@ -72,7 +74,10 @@ public class DealHistoryService {
         if (deleteAll) {
             dealHistoryRepository.deleteAll(dealHistoryEntityList);
         } else {
-            dealHistoryRepository.deleteAllByDealDate(dealDatesList);
+            /*dealHistoryRepository.deleteAllByDealDate(dealDatesList);*/
+            for (Timestamp dealDate: dealDatesList) {
+                dealHistoryRepository.deleteByDealDate(dealDate);
+            }
         }
 
         return dealHistoryEntityList;

@@ -1,6 +1,6 @@
 package com.ourproject.portfoliotracker.data.stock;
 
-import com.ourproject.portfoliotracker.data.portfolio.PortfolioDTO;
+import com.ourproject.portfoliotracker.data.portfolio.PortfolioService;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,9 +11,11 @@ import java.util.List;
 public class StockController {
 
     private final StockService stockService;
+    private final PortfolioService portfolioService;
 
-    public StockController(StockService stockService) {
+    public StockController(StockService stockService, PortfolioService portfolioService) {
         this.stockService = stockService;
+        this.portfolioService = portfolioService;
     }
 
     @PostMapping
@@ -21,14 +23,15 @@ public class StockController {
         return stockService.addStock(stockDTO);
     }
 
-    @GetMapping
+    @GetMapping("/byId")
     public List<StockDTO> getFirst20Stocks(Authentication authentication,
-                                           @RequestParam(name = "portfolioId") Integer portfolioId,
+                                           @RequestParam(name = "portfolioName") String portfolioName,
                                            @RequestParam(name = "pageId") Integer pageId) {
         if (authentication == null) {
             return null;
         }
-        //String userName = authentication.getName();
+        String userName = authentication.getName();
+        Integer portfolioId = portfolioService.getPortfolioId(userName, portfolioName);
         List<StockDTO> stockDTOS = stockService.getFirst20Stocks(portfolioId, pageId);
 
         return stockDTOS;
@@ -46,8 +49,8 @@ public class StockController {
         return stockDTO;
     }
 
-    @DeleteMapping
-    public List<StockEntity> deleteStocks(Authentication authentication,
+    //@DeleteMapping
+/*    public List<StockEntity> deleteStocks(Authentication authentication,
                                           @RequestParam(name = "portfolioId") Integer portfolioId) {
         if (authentication == null) {
             return null;
@@ -55,7 +58,7 @@ public class StockController {
         List<StockEntity> stockEntities = stockService.deleteStocks(portfolioId);
 
         return stockEntities;
-    }
+    }*/
 
     @DeleteMapping
     public StockEntity deleteStock(Authentication authentication,
