@@ -1,20 +1,23 @@
 package com.ourproject.portfoliotracker.security.authentication;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public class AuthenticationDetails implements UserDetails {
 
     private String username;
     private String password;
+    private final List<GrantedAuthority> authorities;
     
-    public AuthenticationDetails(String username, String password) {
+    public AuthenticationDetails(String username, String password,
+        List<? extends GrantedAuthority> authorities) {
         this.username = username;
         this.password = password;
+        this.authorities = new ArrayList<>(authorities);
     }
 
     @Override
@@ -29,7 +32,7 @@ public class AuthenticationDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority("USER"));
+        return authorities;
     }
 
     @Override

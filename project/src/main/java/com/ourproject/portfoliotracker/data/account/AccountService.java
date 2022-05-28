@@ -61,7 +61,6 @@ public class AccountService {
         if (account == null) {
             throw new UsernameNotFoundException("User " + userName + " not found");
         }
-        System.out.println("User " + account.toString() + " not found");
         AccountDSO accountDSO = new AccountDSO();
         accountDSO.setEmail(account.getEmail());
         accountDSO.setRegistrationDate(account.getRegistrationDate());

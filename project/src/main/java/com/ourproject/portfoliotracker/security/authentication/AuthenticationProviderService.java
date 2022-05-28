@@ -12,12 +12,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthenticationProviderService implements AuthenticationProvider {
 
-    //FIXME: 25.05.2022 включить зависимость от бина
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
-
-    @Autowired
     private AuthenticationDetailsService authDetailsService;
+    
+    private BCryptPasswordEncoder passwordEncoder;
+    
+    @Autowired
+    public AuthenticationProviderService(AuthenticationDetailsService authDetailsService,
+                                         BCryptPasswordEncoder passwordEncoder) {
+        this.authDetailsService = authDetailsService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {

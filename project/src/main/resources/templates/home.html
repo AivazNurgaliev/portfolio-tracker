@@ -26,6 +26,10 @@
 
     <main>
         <h2>Home page (access = authorized)</h2>
+
+        <div sec:authorize="hasRole('ROLE_PREMIUM')">
+            YOU HAVE PREMIUM ACCOUNT
+        </div>
     </main>
 </body>
 
