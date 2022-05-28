@@ -3,8 +3,6 @@ package com.ourproject.portfoliotracker.data.accountDetails;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ourproject.portfoliotracker.data.account.AccountEntity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;

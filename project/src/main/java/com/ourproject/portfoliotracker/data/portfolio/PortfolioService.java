@@ -12,14 +12,13 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.lang.reflect.Type;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 public class PortfolioService {
 
     private final PortfolioRepository portfolioRepository;
     private final AccountRepository accountRepository;
+    //FIXME 27.05.2022: add customizable page size
     private Integer pageSize;
 
     @Autowired

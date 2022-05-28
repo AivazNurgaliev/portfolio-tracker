@@ -4,8 +4,6 @@ import com.ourproject.portfoliotracker.data.accountDetails.AccountDetailsEntity;
 import com.ourproject.portfoliotracker.data.dealHistory.DealHistoryEntity;
 import com.ourproject.portfoliotracker.data.portfolio.PortfolioEntity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.ArrayList;

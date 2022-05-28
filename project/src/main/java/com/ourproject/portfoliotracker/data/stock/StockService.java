@@ -1,15 +1,10 @@
 package com.ourproject.portfoliotracker.data.stock;
 
-import com.ourproject.portfoliotracker.data.account.AccountRepository;
-import com.ourproject.portfoliotracker.data.dealHistory.DealHistoryDTO;
-import com.ourproject.portfoliotracker.data.dealHistory.DealHistoryEntity;
-import com.ourproject.portfoliotracker.data.portfolio.PortfolioRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.lang.reflect.Type;
 import java.util.List;
 

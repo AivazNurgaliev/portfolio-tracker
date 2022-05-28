@@ -3,8 +3,6 @@ package com.ourproject.portfoliotracker.data.stock;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ourproject.portfoliotracker.data.portfolio.PortfolioEntity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 
 @Entity

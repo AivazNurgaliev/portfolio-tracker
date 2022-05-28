@@ -13,7 +13,8 @@ import org.springframework.stereotype.Service;
 public class AuthenticationProviderService implements AuthenticationProvider {
 
     //FIXME: 25.05.2022 включить зависимость от бина
-    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     private AuthenticationDetailsService authDetailsService;
