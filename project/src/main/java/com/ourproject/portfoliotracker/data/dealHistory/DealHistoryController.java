@@ -23,7 +23,7 @@ public class DealHistoryController {
     public DealHistoryEntity addDealHistory(@RequestBody final DealHistoryDTO dealHistoryDTO) {
         return dealHistoryService.addDealHistory(dealHistoryDTO);
     }
-
+//FIXME 01.07.2020: краш http://localhost:8080/deal?pageId=1
     @GetMapping
     public List<DealHistoryDTO> getFirst20Deals(Authentication authentication,
                                                 @RequestParam(name = "pageId") Integer pageId) {

@@ -2,8 +2,9 @@ package com.ourproject.portfoliotracker.data.account;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.ourproject.portfoliotracker.security.PasswordService;
 
 import javax.transaction.Transactional;
 import java.sql.Date;
@@ -14,13 +15,13 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
 
-    private BCryptPasswordEncoder passwordEncoder;
+    private PasswordService passwordService;
 
     @Autowired
     public AccountService(AccountRepository accountRepository,
-                          BCryptPasswordEncoder passwordEncoder) {
+            PasswordService passwordService) {
         this.accountRepository = accountRepository;
-        this.passwordEncoder = passwordEncoder;
+        this.passwordService = passwordService;
     }
 
     public Integer getUserId(String userName) {
@@ -149,12 +150,10 @@ public class AccountService {
         if (account == null) {
             throw new UsernameNotFoundException("User " + userName + " not found");
         }
-        String encodedPass = passwordEncoder.encode(newPassword);
 
-        while(passwordEncoder.upgradeEncoding(encodedPass)) {
-            encodedPass = passwordEncoder.encode(encodedPass);
-        }
+        String encodedPass = passwordService.encode(newPassword);
         account.setPass(encodedPass);
+
         return account;
     }
 
