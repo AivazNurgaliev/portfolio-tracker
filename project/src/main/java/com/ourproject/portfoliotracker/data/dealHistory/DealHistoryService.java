@@ -43,7 +43,6 @@ public class DealHistoryService {
     }*/
 
     public List<DealHistoryDTO> getFirst20Deals(Integer accountId, Integer pageId) {
-
         List<DealHistoryEntity> dealHistoryEntities = dealHistoryRepository.findAllByAccountId(accountId);
         if (dealHistoryEntities == null) {
             throw new RuntimeException("deal History of user id: " + accountId + " not found");
@@ -52,12 +51,14 @@ public class DealHistoryService {
         ModelMapper modelMapper = new ModelMapper();
         Type listType = new TypeToken<List<DealHistoryDTO>>(){}.getType();
         List<DealHistoryDTO> dealHistoryDTOS = modelMapper.map(dealHistoryEntities, listType);
-
-        if (pageId < 1) {
-            throw new RuntimeException("pageId cannot be negative or zero: " + pageId);
+        int maxAllowedPages = ((dealHistoryDTOS.size() - 1) / 20) + 1;
+        if (pageId < 1 || pageId > maxAllowedPages) {
+            throw new RuntimeException("pageId cannot be negative or zero or more than allowed: " + pageId);
         }
-
-        return dealHistoryDTOS.subList(20 * (pageId - 1), 20 * pageId + 1);
+        return dealHistoryDTOS.subList(
+                20 * (pageId - 1),
+                Math.min(20 * pageId, dealHistoryDTOS.size())
+        );
     }
 
     //dealType, 0 - chosen from List, 1 - all,

@@ -57,11 +57,15 @@ public class StockService {
         Type listType = new TypeToken<List<StockDTO>>(){}.getType();
         List<StockDTO> stockDTOS = modelMapper.map(stockEntities, listType);
 
-        if (pageId < 1) {
-            throw new RuntimeException("pageId cannot be negative or zero: " + pageId);
+        int maxAllowedPages = ((stockDTOS.size() - 1) / 20) + 1;
+        if (pageId < 1 || pageId > maxAllowedPages) {
+            throw new RuntimeException("pageId cannot be negative or zero or more than allowed: " + pageId);
         }
 
-        return stockDTOS.subList(20 * (pageId - 1), 20 * pageId + 1);
+        return stockDTOS.subList(
+                20 * (pageId - 1),
+                Math.min(20 * pageId, stockDTOS.size())
+        );
     }
 
 /*    public List<StockEntity> deleteStocks(Integer portfolioId) {
