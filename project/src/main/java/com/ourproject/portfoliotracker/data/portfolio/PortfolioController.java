@@ -22,7 +22,7 @@ public class PortfolioController {
     public PortfolioEntity addPortfolio(@RequestBody PortfolioDTO portfolioDTO) {
         return portfolioService.addPortfolio(portfolioDTO);
     }
-
+//FIXME 01.07.2022: краш http://localhost:8080/portfolio?name=abc
     @GetMapping
     public PortfolioDTO getPortfolio(Authentication authentication,
                                      @RequestParam(name = "name") String name) {
@@ -40,7 +40,7 @@ public class PortfolioController {
 
         return null;
     }
-
+//FIXME 01.07.2022: краш http://localhost:8080/portfolio/1 
     @GetMapping("/{pageId}")
     public List<PortfolioDTO> getFirst20Portfolio(Authentication authentication,
                                                   @PathVariable(name = "pageId") Integer pageId) {

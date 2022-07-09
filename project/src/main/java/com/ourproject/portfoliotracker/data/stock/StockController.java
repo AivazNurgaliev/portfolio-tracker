@@ -22,7 +22,7 @@ public class StockController {
     public StockEntity addStock(@RequestBody final StockDTO stockDTO) {
         return stockService.addStock(stockDTO);
     }
-
+//FIXME 01.07.2022: краш http://localhost:8080/stock/byId?portfolioName=1&pageId=1
     @GetMapping("/byId")
     public List<StockDTO> getFirst20Stocks(Authentication authentication,
                                            @RequestParam(name = "portfolioName") String portfolioName,
@@ -41,7 +41,7 @@ public class StockController {
 
         return null;
     }
-
+//FIXME 01.07.2022: краш http://localhost:8080/stock?portfolioId=7&stockId=8
     @GetMapping
     public StockDTO getStock(Authentication authentication,
                              @RequestParam(name = "portfolioId") Integer portfolioId,

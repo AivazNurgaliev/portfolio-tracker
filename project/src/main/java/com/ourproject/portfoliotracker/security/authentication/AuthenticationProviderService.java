@@ -6,18 +6,25 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.ourproject.portfoliotracker.security.PasswordService;
 
 @Service
 public class AuthenticationProviderService implements AuthenticationProvider {
 
-    //FIXME: 25.05.2022 включить зависимость от бина
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    private AuthenticationDetailsService authDetailsService;
+
+    private PasswordService passwordService;
 
     @Autowired
-    private AuthenticationDetailsService authDetailsService;
+    public AuthenticationProviderService(
+            AuthenticationDetailsService authDetailsService,
+            PasswordService passwordService) {
+
+        this.authDetailsService = authDetailsService;
+        this.passwordService = passwordService;
+    }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -25,11 +32,11 @@ public class AuthenticationProviderService implements AuthenticationProvider {
         String password = authentication.getCredentials().toString();
         AuthenticationDetails authDetails = authDetailsService.loadUserByUsername(login);
 
-        if (passwordEncoder.matches(password, authDetails.getPassword())) {
+        if (passwordService.validatePassword(password, authDetails.getPassword())) {
             return new UsernamePasswordAuthenticationToken(
-                authDetails.getUsername(),
-                authDetails.getPassword(),
-                authDetails.getAuthorities());
+                    authDetails.getUsername(),
+                    authDetails.getPassword(),
+                    authDetails.getAuthorities());
         } else {
             throw new BadCredentialsException("Bad credentials");
         }
@@ -38,7 +45,7 @@ public class AuthenticationProviderService implements AuthenticationProvider {
     @Override
     public boolean supports(Class<?> authentication) {
         return UsernamePasswordAuthenticationToken.class
-            .isAssignableFrom(authentication);
+                .isAssignableFrom(authentication);
     }
-    
+
 }
