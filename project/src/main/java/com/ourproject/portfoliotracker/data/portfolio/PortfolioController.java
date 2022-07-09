@@ -30,11 +30,15 @@ public class PortfolioController {
             return null;
         }
         String userName = authentication.getName();
-        Integer accountId = accountService.getUserId(userName);
+        try {
+            Integer accountId = accountService.getUserId(userName);
+            PortfolioDTO portfolioDTO = portfolioService.getPortfolio(accountId, name);
+            return portfolioDTO;
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        }
 
-        PortfolioDTO portfolioDTO = portfolioService.getPortfolio(accountId, name);
-
-        return portfolioDTO;
+        return null;
     }
 
     @GetMapping("/{pageId}")
@@ -44,9 +48,13 @@ public class PortfolioController {
             return null;
         }
         String userName = authentication.getName();
-        List<PortfolioDTO> portfolioDTOS = portfolioService.getFirst20Portfolio(userName, pageId);
-
-        return portfolioDTOS;
+        try {
+            List<PortfolioDTO> portfolioDTOS = portfolioService.getFirst20Portfolio(userName, pageId);
+            return portfolioDTOS;
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
     }
 
     @DeleteMapping
@@ -56,9 +64,15 @@ public class PortfolioController {
             return null;
         }
         String userName = authentication.getName();
-        Integer accountId = accountService.getUserId(userName);
+        try {
+            Integer accountId = accountService.getUserId(userName);
+            PortfolioEntity deletedPortfolio = portfolioService.deletePortfolio(accountId, name);
+            return deletedPortfolio;
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        }
 
-        return portfolioService.deletePortfolio(accountId, name);
+        return null;
     }
 
     @PutMapping("/name")
@@ -69,9 +83,15 @@ public class PortfolioController {
             return null;
         }
         String userName = authentication.getName();
-        Integer accountId = accountService.getUserId(userName);
+        try {
+            Integer accountId = accountService.getUserId(userName);
+            PortfolioEntity portfolio = portfolioService.editName(accountId, portfolioName, newName);
+            return portfolio;
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        }
 
-        return portfolioService.editName(accountId, portfolioName, newName);
+        return null;
     }
 
     @PutMapping("/description")
@@ -82,8 +102,14 @@ public class PortfolioController {
             return null;
         }
         String userName = authentication.getName();
-        Integer accountId = accountService.getUserId(userName);
+        try {
+            Integer accountId = accountService.getUserId(userName);
+            PortfolioEntity portfolio = portfolioService.editDescription(accountId, portfolioName, newDescription);
+            return portfolio;
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        }
 
-        return portfolioService.editDescription(accountId, portfolioName, newDescription);
+        return null;
     }
 }

@@ -3,7 +3,6 @@ package com.ourproject.portfoliotracker.data.dealHistory;
 import com.ourproject.portfoliotracker.data.account.AccountService;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -31,9 +30,15 @@ public class DealHistoryController {
             return null;
         }
         String userName = authentication.getName();
-        Integer accountId = accountService.getUserId(userName);
+        try {
+            Integer accountId = accountService.getUserId(userName);
+            List<DealHistoryDTO> dealHistoryDTOS = dealHistoryService.getFirst20Deals(accountId, pageId);
+            return dealHistoryDTOS;
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        }
 
-        return dealHistoryService.getFirst20Deals(accountId, pageId);
+        return null;
     }
 
     @DeleteMapping
@@ -44,8 +49,14 @@ public class DealHistoryController {
             return null;
         }
         String userName = authentication.getName();
-        Integer accountId = accountService.getUserId(userName);
-
-        return dealHistoryService.deleteDealHistory(accountId, dealDatesList, deleteAll);
+        try {
+            Integer accountId = accountService.getUserId(userName);
+            List<DealHistoryEntity> dealHistory = dealHistoryService.
+                    deleteDealHistory(accountId, dealDatesList, deleteAll);
+            return dealHistory;
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
     }
 }

@@ -31,10 +31,15 @@ public class StockController {
             return null;
         }
         String userName = authentication.getName();
-        Integer portfolioId = portfolioService.getPortfolioId(userName, portfolioName);
-        List<StockDTO> stockDTOS = stockService.getFirst20Stocks(portfolioId, pageId);
+        try {
+            Integer portfolioId = portfolioService.getPortfolioId(userName, portfolioName);
+            List<StockDTO> stockDTOS = stockService.getFirst20Stocks(portfolioId, pageId);
+            return stockDTOS;
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        }
 
-        return stockDTOS;
+        return null;
     }
 
     @GetMapping
@@ -44,9 +49,15 @@ public class StockController {
         if (authentication == null) {
             return null;
         }
-        StockDTO stockDTO = stockService.getStock(portfolioId, stockId);
 
-        return stockDTO;
+        try {
+            StockDTO stockDTO = stockService.getStock(portfolioId, stockId);
+            return stockDTO;
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return null;
     }
 
     //@DeleteMapping
@@ -60,6 +71,7 @@ public class StockController {
         return stockEntities;
     }*/
 
+    // FIXME: 09.07.2022 нужен рефактор
     @DeleteMapping
     public StockEntity deleteStock(Authentication authentication,
                                    @RequestParam(name = "portfolioId") Integer portfolioId,
@@ -67,12 +79,20 @@ public class StockController {
         if (authentication == null) {
             return null;
         }
-        StockDTO stockDTO = stockService.getStock(portfolioId, stockId);
-        if (stockDTO == null) {
-            throw new RuntimeException(
-                    "Portfolio id: " + portfolioId + " and stock id: " + stockId + " not found"
-            );
+
+        try {
+            StockDTO stockDTO = stockService.getStock(portfolioId, stockId);
+            if (stockDTO == null) {
+                throw new RuntimeException(
+                        "Portfolio id: " + portfolioId + " and stock id: " + stockId + " not found"
+                );
+            }
+            StockEntity stock = stockService.deleteStock(portfolioId, stockId);
+            return stock;
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
         }
-        return stockService.deleteStock(portfolioId, stockId);
+
+        return null;
     }
 }

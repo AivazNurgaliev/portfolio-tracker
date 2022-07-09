@@ -24,8 +24,14 @@ public class AccountDetailsController {
             return null;
         }
         String userName = authentication.getName();
-        AccountDetailsEntity accountDetails = accountDetailsService.editShowCurrency1(userName, currency1);
-        return accountDetails;
+        try {
+            AccountDetailsEntity accountDetails = accountDetailsService.editShowCurrency1(userName, currency1);
+            return accountDetails;
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return null;
     }
 
     @PutMapping("/currency2")
@@ -35,8 +41,14 @@ public class AccountDetailsController {
             return null;
         }
         String userName = authentication.getName();
-        AccountDetailsEntity accountDetails = accountDetailsService.editShowCurrency1(userName, currency2);
-        return accountDetails;
+        try {
+            AccountDetailsEntity accountDetails = accountDetailsService.editShowCurrency1(userName, currency2);
+            return accountDetails;
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return null;
     }
 
     @PutMapping("/subscriptionDate")
@@ -47,9 +59,14 @@ public class AccountDetailsController {
             return null;
         }
         String userName = authentication.getName();
-        AccountDetailsEntity accountDetails = accountDetailsService
-                .editSubscriptionDate(userName, startDate, endDate);
+        try {
+            AccountDetailsEntity accountDetails = accountDetailsService
+                    .editSubscriptionDate(userName, startDate, endDate);
+            return accountDetails;
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        }
 
-        return accountDetails;
+        return null;
     }
 }

@@ -42,9 +42,14 @@ public class AccountController {
             return null;
         }
         String userName = authentication.getName();
-        AccountDSO accountDSO = accountService.getAccount(userName);
+        try {
+            AccountDSO accountDSO = accountService.getAccount(userName);
+            return accountDSO;
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        }
 
-        return accountDSO;
+        return null;
     }
 
     @DeleteMapping
@@ -54,7 +59,14 @@ public class AccountController {
         }
         String userName = authentication.getName();
 
-        return accountService.deleteAccount(userName);
+        try {
+            AccountEntity account = accountService.deleteAccount(userName);
+            return account;
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return null;
     }
 
     @PutMapping("/password")
@@ -65,7 +77,14 @@ public class AccountController {
         }
         String userName = authentication.getName();
 
-        return accountService.editPassword(userName, newPassword);
+        try {
+            AccountEntity account = accountService.editPassword(userName, newPassword);
+            return account;
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return null;
     }
 
     @PutMapping("/username")
@@ -76,7 +95,14 @@ public class AccountController {
         }
         String userName = authentication.getName();
 
-        return accountService.editUserName(userName, newUserName);
+        try {
+            AccountEntity account = accountService.editUserName(userName, newUserName);
+            return account;
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return null;
     }
 
     @PutMapping("/email")
@@ -87,7 +113,14 @@ public class AccountController {
         }
         String userName = authentication.getName();
 
-        return accountService.editEmail(userName, newEmail);
+        try {
+            AccountEntity account = accountService.editEmail(userName, newEmail);
+            return account;
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return null;
     }
 
 }

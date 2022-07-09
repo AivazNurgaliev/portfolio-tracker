@@ -67,7 +67,6 @@ public class AccountDetailsService {
     }*/
     @Transactional
     public AccountDetailsEntity editLastLoginDate(String userName, Date date) {
-
         AccountEntity account = accountRepository.findByUserName(userName);
         if (account == null) {
             throw new UsernameNotFoundException("User " + userName + " not found");
