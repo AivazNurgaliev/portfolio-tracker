@@ -7,6 +7,7 @@ import com.ourproject.portfoliotracker.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -37,12 +38,9 @@ public class AccountController {
         String userName = authentication.getName();
         try {
             return accountService.getAccount(userName);
-        } catch (RuntimeException e) {
-            //throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-            System.out.println(e.getMessage());
+        } catch (UsernameNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
-
-        return null;
     }
 
     @DeleteMapping
@@ -55,11 +53,9 @@ public class AccountController {
         String userName = authentication.getName();
         try {
             return accountService.deleteAccount(userName);
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
+        } catch (UsernameNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
-
-        return null;
     }
 
     @PutMapping("/password")
@@ -73,11 +69,9 @@ public class AccountController {
         String userName = authentication.getName();
         try {
             return accountService.editPassword(userName, newPassword);
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
+        } catch (UsernameNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
-
-        return null;
     }
 
     @PutMapping("/username")
@@ -91,11 +85,9 @@ public class AccountController {
         String userName = authentication.getName();
         try {
             return accountService.editUserName(userName, newUserName);
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
+        } catch (UsernameNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
-
-        return null;
     }
 
     @PutMapping("/email")
@@ -109,11 +101,9 @@ public class AccountController {
         String userName = authentication.getName();
         try {
             return accountService.editEmail(userName, newEmail);
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
+        } catch (UsernameNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
-
-        return null;
     }
 
 }
