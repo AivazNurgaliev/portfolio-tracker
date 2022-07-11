@@ -28,7 +28,7 @@ public class StockController {
         return stockService.addStock(stockDTO);
     }
 
-    @GetMapping()
+    @GetMapping("/byId")
     public List<StockDTO> getFirst20Stocks(Authentication authentication,
                                            @RequestParam(name = "portfolioName") String portfolioName,
                                            @RequestParam(name = "pageId") Integer pageId) {

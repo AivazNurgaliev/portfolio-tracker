@@ -1,12 +1,18 @@
 package com.ourproject.portfoliotracker.controllers;
 
+import com.ourproject.portfoliotracker.exceptions.DealHistoryNotFoundException;
+import com.ourproject.portfoliotracker.exceptions.WrongDataException;
 import com.ourproject.portfoliotracker.services.AccountService;
 import com.ourproject.portfoliotracker.dtos.DealHistoryDTO;
 import com.ourproject.portfoliotracker.entities.DealHistoryEntity;
 import com.ourproject.portfoliotracker.services.DealHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,11 +47,9 @@ public class DealHistoryController {
         try {
             Integer accountId = accountService.getUserId(userName);
             return dealHistoryService.getFirst20Deals(accountId, pageId);
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
+        } catch (DealHistoryNotFoundException | WrongDataException | UsernameNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
-
-        return null;
     }
 
     @DeleteMapping
@@ -61,9 +65,8 @@ public class DealHistoryController {
         try {
             Integer accountId = accountService.getUserId(userName);
             return dealHistoryService.deleteDealHistory(accountId, dealDatesList, deleteAll);
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
+        } catch (DealHistoryNotFoundException | UsernameNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
-        return null;
     }
 }

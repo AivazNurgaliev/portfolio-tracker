@@ -47,7 +47,7 @@ public class PortfolioController {
         return null;
     }
 
-    @GetMapping()
+    @GetMapping("/{pageId}")
     public List<PortfolioDTO> getFirst20Portfolio(Authentication authentication,
                                                   @RequestParam(name = "pageId") Integer pageId) {
 

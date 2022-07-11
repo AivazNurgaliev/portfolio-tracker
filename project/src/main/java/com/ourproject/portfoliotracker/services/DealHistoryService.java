@@ -2,6 +2,8 @@ package com.ourproject.portfoliotracker.services;
 
 import com.ourproject.portfoliotracker.dtos.DealHistoryDTO;
 import com.ourproject.portfoliotracker.entities.DealHistoryEntity;
+import com.ourproject.portfoliotracker.exceptions.DealHistoryNotFoundException;
+import com.ourproject.portfoliotracker.exceptions.WrongDataException;
 import com.ourproject.portfoliotracker.repositories.DealHistoryRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -36,11 +38,12 @@ public class DealHistoryService {
         return dealHistoryRepository.save(dealHistory);
     }
 
-    public List<DealHistoryDTO> getFirst20Deals(Integer accountId, Integer pageId) {
+    public List<DealHistoryDTO> getFirst20Deals(Integer accountId, Integer pageId)
+            throws DealHistoryNotFoundException, WrongDataException {
 
         List<DealHistoryEntity> dealHistoryEntities = dealHistoryRepository.findAllByAccountId(accountId);
         if (dealHistoryEntities == null) {
-            throw new RuntimeException("deal History of user id: " + accountId + " not found");
+            throw new DealHistoryNotFoundException("deal History of user id: " + accountId + " not found");
         }
 
         ModelMapper modelMapper = new ModelMapper();
@@ -49,7 +52,7 @@ public class DealHistoryService {
 
         int maxAllowedPages = ((dealHistoryDTOS.size() - 1) / 20) + 1;
         if (pageId < 1 || pageId > maxAllowedPages) {
-            throw new RuntimeException("pageId cannot be negative or zero or more than allowed: " + pageId);
+            throw new WrongDataException("pageId cannot be negative or zero or more than allowed: " + pageId);
         }
 
         return dealHistoryDTOS.subList(
@@ -61,11 +64,11 @@ public class DealHistoryService {
     //dealType, 0 - chosen from List, 1 - all,
     public List<DealHistoryEntity> deleteDealHistory(Integer accountId,
                                                      List<LocalDateTime> dealDatesList,
-                                                     Boolean deleteAll) {
+                                                     Boolean deleteAll) throws DealHistoryNotFoundException {
 
         List<DealHistoryEntity> dealHistoryEntityList = dealHistoryRepository.findAllByAccountId(accountId);
         if (dealHistoryEntityList == null) {
-            throw new RuntimeException("Deal History of user id: " + accountId + " does not exist");
+            throw new DealHistoryNotFoundException("Deal History of user id: " + accountId + " does not exist");
         }
         if (deleteAll) {
             dealHistoryRepository.deleteAll(dealHistoryEntityList);
