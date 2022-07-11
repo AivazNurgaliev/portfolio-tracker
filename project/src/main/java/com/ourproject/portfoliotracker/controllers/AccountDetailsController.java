@@ -3,8 +3,11 @@ package com.ourproject.portfoliotracker.controllers;
 import com.ourproject.portfoliotracker.entities.AccountDetailsEntity;
 import com.ourproject.portfoliotracker.services.AccountDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -31,11 +34,9 @@ public class AccountDetailsController {
         String userName = authentication.getName();
         try {
             return accountDetailsService.editShowCurrency1(userName, currency1);
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
+        } catch (UsernameNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
-
-        return null;
     }
 
     @PutMapping("/currency2")
@@ -49,11 +50,9 @@ public class AccountDetailsController {
         String userName = authentication.getName();
         try {
             return accountDetailsService.editShowCurrency1(userName, currency2);
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
+        } catch (UsernameNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
-
-        return null;
     }
 
     @PutMapping("/subscriptionDate")
@@ -68,10 +67,8 @@ public class AccountDetailsController {
         String userName = authentication.getName();
         try {
             return accountDetailsService.editSubscriptionDate(userName, startDate, endDate);
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
+        } catch (UsernameNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
-
-        return null;
     }
 }

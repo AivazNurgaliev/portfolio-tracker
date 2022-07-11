@@ -31,7 +31,11 @@ public class AccountDetailsService {
     public AccountDetailsEntity addAccountDetails(AccountDRO accountDRO) {
 
         AccountDetailsEntity accountDetails = new AccountDetailsEntity();
-        accountDetails.setAccountId(accountRepository.findByUserName(accountDRO.getUserName()).getAccountId());
+        AccountEntity account = accountRepository.findByUserName(accountDRO.getUserName());
+        if (account == null) {
+            throw new UsernameNotFoundException("User " + account.getUserName() + " not found");
+        }
+        accountDetails.setAccountId(account.getAccountId());
         accountDetails.setShowCurrency1(accountDRO.getShowCurrency1());
         accountDetails.setShowCurrency2(accountDRO.getShowCurrency2());
         return accountDetailsRepository.save(accountDetails);
