@@ -47,7 +47,9 @@ public class DealHistoryController {
         try {
             Integer accountId = accountService.getUserId(userName);
             return dealHistoryService.getFirst20Deals(accountId, pageId);
-        } catch (DealHistoryNotFoundException | WrongDataException | UsernameNotFoundException e) {
+        } catch (DealHistoryNotFoundException | UsernameNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (WrongDataException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
@@ -66,8 +68,7 @@ public class DealHistoryController {
             Integer accountId = accountService.getUserId(userName);
             return dealHistoryService.deleteDealHistory(accountId, dealDatesList, deleteAll);
         } catch (DealHistoryNotFoundException | UsernameNotFoundException e) {
-            //Conflict так как клиентская ошибка (409)
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 }

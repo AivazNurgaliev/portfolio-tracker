@@ -1,6 +1,8 @@
 package com.ourproject.portfoliotracker.services;
 
 import com.ourproject.portfoliotracker.entities.AccountEntity;
+import com.ourproject.portfoliotracker.exceptions.PortfolioNotFoundException;
+import com.ourproject.portfoliotracker.exceptions.WrongDataException;
 import com.ourproject.portfoliotracker.repositories.AccountRepository;
 
 import com.ourproject.portfoliotracker.dtos.PortfolioDTO;
@@ -28,7 +30,8 @@ public class PortfolioService {
         this.accountRepository = accountRepository;
     }
 
-    public Integer getPortfolioId(String userName, String portfolioName) {
+    public Integer getPortfolioId(String userName, String portfolioName)
+            throws PortfolioNotFoundException {
 
         AccountEntity account = accountRepository.findByUserName(userName);
         if (account == null) {
@@ -39,7 +42,7 @@ public class PortfolioService {
         PortfolioEntity portfolio = portfolioRepository.findByAccountIdAndName(accountId, portfolioName);
 
         if (portfolio == null) {
-            throw new RuntimeException("Portfolio " + portfolioName + " not found");
+            throw new PortfolioNotFoundException("Portfolio " + portfolioName + " not found");
         }
 
         return portfolio.getPortfolioId();
@@ -54,12 +57,13 @@ public class PortfolioService {
         return portfolioRepository.save(portfolio);
     }
 
-    public List<PortfolioDTO> getFirst20Portfolio(String userName, Integer pageId) {
+    public List<PortfolioDTO> getFirst20Portfolio(String userName, Integer pageId)
+            throws PortfolioNotFoundException, WrongDataException {
 
         Integer id = accountRepository.findByUserName(userName).getAccountId();
         List<PortfolioEntity> portfolioEntities = portfolioRepository.findAllByAccountId(id);
         if (portfolioEntities == null) {
-            throw new RuntimeException("Portfolios of id " + id + " not found");
+            throw new PortfolioNotFoundException("Portfolios of id " + id + " not found");
         }
 
         ModelMapper modelMapper = new ModelMapper();
@@ -68,7 +72,7 @@ public class PortfolioService {
 
         int maxAllowedPages = ((portfolioDTOS.size() - 1) / 20) + 1;
         if (pageId < 1 || pageId > maxAllowedPages) {
-            throw new RuntimeException("pageId cannot be negative or zero or more than allowed: " + pageId);
+            throw new WrongDataException("pageId cannot be negative or zero or more than allowed: " + pageId);
         }
 
         return portfolioDTOS.subList(
@@ -77,11 +81,14 @@ public class PortfolioService {
         );
     }
 
-    public PortfolioDTO getPortfolio(Integer accountId, String name) {
+    public PortfolioDTO getPortfolio(Integer accountId, String name)
+            throws PortfolioNotFoundException {
 
         PortfolioEntity portfolio = portfolioRepository.findByAccountIdAndName(accountId, name);
         if (portfolio == null) {
-            throw new RuntimeException("Portfolio of id " + accountId + " and name " + name + " not found");
+            throw new PortfolioNotFoundException(
+                    "Portfolio of id " + accountId + " and name " + name + " not found"
+            );
         }
 
         PortfolioDTO portfolioDTO = new PortfolioDTO();
@@ -91,11 +98,14 @@ public class PortfolioService {
         return portfolioDTO;
     }
 
-    public PortfolioEntity deletePortfolio(Integer accountId, String name) {
+    public PortfolioEntity deletePortfolio(Integer accountId, String name)
+            throws PortfolioNotFoundException {
 
         PortfolioEntity portfolio = portfolioRepository.findByAccountIdAndName(accountId, name);
         if (portfolio == null) {
-            throw new RuntimeException("Portfolio of id " + accountId + " and name " + name + " not found");
+            throw new PortfolioNotFoundException(
+                    "Portfolio of id " + accountId + " and name " + name + " not found"
+            );
         }
 
         portfolioRepository.delete(portfolio);
@@ -104,11 +114,14 @@ public class PortfolioService {
     }
 
     @Transactional
-    public PortfolioEntity editName(Integer accountId, String portfolioName, String newName) {
+    public PortfolioEntity editName(Integer accountId, String portfolioName, String newName)
+            throws PortfolioNotFoundException {
 
         PortfolioEntity portfolio = portfolioRepository.findByAccountIdAndName(accountId, portfolioName);
         if (portfolio == null) {
-            throw new RuntimeException("Portfolio of id " + accountId + " and name " + portfolioName + " not found");
+            throw new PortfolioNotFoundException(
+                    "Portfolio of id " + accountId + " and name " + portfolioName + " not found"
+            );
         }
 
         portfolio.setName(newName);
@@ -117,11 +130,14 @@ public class PortfolioService {
     }
 
     @Transactional
-    public PortfolioEntity editDescription(Integer accountId, String portfolioName, String newDescription) {
+    public PortfolioEntity editDescription(Integer accountId, String portfolioName, String newDescription)
+            throws PortfolioNotFoundException {
 
         PortfolioEntity portfolio = portfolioRepository.findByAccountIdAndName(accountId, portfolioName);
         if (portfolio == null) {
-            throw new RuntimeException("Portfolio of id " + accountId + " and name " + portfolioName + " not found");
+            throw new PortfolioNotFoundException(
+                    "Portfolio of id " + accountId + " and name " + portfolioName + " not found"
+            );
         }
 
         portfolio.setDescription(newDescription);
