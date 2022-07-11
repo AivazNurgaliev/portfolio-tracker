@@ -66,6 +66,7 @@ public class DealHistoryController {
             Integer accountId = accountService.getUserId(userName);
             return dealHistoryService.deleteDealHistory(accountId, dealDatesList, deleteAll);
         } catch (DealHistoryNotFoundException | UsernameNotFoundException e) {
+            //Conflict так как клиентская ошибка (409)
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
