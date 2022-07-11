@@ -1,12 +1,17 @@
 package com.ourproject.portfoliotracker.controllers;
 
+import com.ourproject.portfoliotracker.exceptions.PortfolioNotFoundException;
+import com.ourproject.portfoliotracker.exceptions.StockNotFoundException;
+import com.ourproject.portfoliotracker.exceptions.WrongDataException;
 import com.ourproject.portfoliotracker.services.PortfolioService;
 import com.ourproject.portfoliotracker.dtos.StockDTO;
 import com.ourproject.portfoliotracker.entities.StockEntity;
 import com.ourproject.portfoliotracker.services.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -40,11 +45,11 @@ public class StockController {
         String username = authentication.getName();
         try {
             return stockService.getFirst20Stocks(username, portfolioName, pageId);
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
+        } catch (PortfolioNotFoundException | StockNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (WrongDataException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
-
-        return null;
     }
 
     @GetMapping
@@ -59,11 +64,9 @@ public class StockController {
         String username = authentication.getName();
         try {
             return stockService.getStock(username, portfolioName, stockTicker);
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
+        } catch (PortfolioNotFoundException | StockNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
-
-        return null;
     }
 
     @DeleteMapping
@@ -79,11 +82,9 @@ public class StockController {
         try {
             StockDTO stockDTO = stockService.getStock(username, portfolioName, stockTicker);
             return  stockService.deleteStock(username, portfolioName, stockTicker);
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
+        } catch (PortfolioNotFoundException | StockNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
-
-        return null;
     }
 
     @PutMapping
@@ -99,10 +100,8 @@ public class StockController {
         String username = authentication.getName();
         try {
             return stockService.editAmount(username, portfolioName, stockTicker, newAmount);
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
+        } catch (PortfolioNotFoundException | StockNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
-
-        return null;
     }
 }

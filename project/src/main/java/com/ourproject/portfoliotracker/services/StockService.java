@@ -2,6 +2,9 @@ package com.ourproject.portfoliotracker.services;
 
 import com.ourproject.portfoliotracker.dtos.StockDTO;
 import com.ourproject.portfoliotracker.entities.StockEntity;
+import com.ourproject.portfoliotracker.exceptions.PortfolioNotFoundException;
+import com.ourproject.portfoliotracker.exceptions.StockNotFoundException;
+import com.ourproject.portfoliotracker.exceptions.WrongDataException;
 import com.ourproject.portfoliotracker.repositories.StockRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -31,12 +34,13 @@ public class StockService {
         return stockRepository.save(stock);
     }
 
-    public StockDTO getStock(String username, String portfolioName, String stockTicker) {
+    public StockDTO getStock(String username, String portfolioName, String stockTicker)
+            throws PortfolioNotFoundException, StockNotFoundException {
 
         Integer portfolioId = portfolioService.getPortfolioId(username, portfolioName);
         StockEntity stock = stockRepository.findByPortfolioIdAndTicker(portfolioId, stockTicker);
         if (stock == null) {
-            throw new RuntimeException("Stock of portfolio id: "
+            throw new StockNotFoundException("Stock of portfolio id: "
                     + portfolioId + " and stockTicker: " + stockTicker + " not found!");
         }
 
@@ -47,12 +51,13 @@ public class StockService {
         return stockDTO;
     }
 
-    public List<StockDTO> getFirst20Stocks(String username, String portfolioName, Integer pageId) {
+    public List<StockDTO> getFirst20Stocks(String username, String portfolioName, Integer pageId)
+            throws PortfolioNotFoundException, StockNotFoundException, WrongDataException {
 
         Integer portfolioId = portfolioService.getPortfolioId(username, portfolioName);
         List<StockEntity> stockEntities = stockRepository.findAllByPortfolioId(portfolioId);
         if (stockEntities == null) {
-            throw new RuntimeException("Stocks of portfolio id: " + portfolioId + " not found");
+            throw new StockNotFoundException("Stocks of portfolio id: " + portfolioId + " not found");
         }
 
         ModelMapper modelMapper = new ModelMapper();
@@ -62,7 +67,7 @@ public class StockService {
         int maxAllowedPages = ((stockDTOS.size() - 1) / 20) + 1;
 
         if (pageId < 1 || pageId > maxAllowedPages) {
-            throw new RuntimeException("pageId cannot be negative or zero or more than allowed: " + pageId);
+            throw new WrongDataException("pageId cannot be negative or zero or more than allowed: " + pageId);
         }
 
         return stockDTOS.subList(
@@ -71,12 +76,13 @@ public class StockService {
         );
     }
 
-    public StockEntity deleteStock(String username, String portfolioName, String stockTicker) {
+    public StockEntity deleteStock(String username, String portfolioName, String stockTicker)
+            throws PortfolioNotFoundException, StockNotFoundException {
 
         Integer portfolioId = portfolioService.getPortfolioId(username, portfolioName);
         StockEntity stock = stockRepository.findByPortfolioIdAndTicker(portfolioId, stockTicker);
         if (stock == null) {
-            throw new RuntimeException(
+            throw new StockNotFoundException(
                     "Stock of portfolio id: " + portfolioId + " and stock id: " + stockTicker +  " not found"
             );
         }
@@ -86,12 +92,13 @@ public class StockService {
         return stock;
     }
 
-    public StockDTO editAmount(String username, String portfolioName, String stockTicker, Integer newAmount) {
+    public StockDTO editAmount(String username, String portfolioName, String stockTicker, Integer newAmount)
+            throws PortfolioNotFoundException, StockNotFoundException {
 
         Integer portfolioId = portfolioService.getPortfolioId(username, portfolioName);
         StockEntity stock = stockRepository.findByPortfolioIdAndTicker(portfolioId, stockTicker);
         if (stock == null) {
-            throw new RuntimeException(
+            throw new StockNotFoundException(
                     "Stock of portfolio id: " + portfolioId + " and stock id: " + stockTicker +  " not found"
             );
         }
