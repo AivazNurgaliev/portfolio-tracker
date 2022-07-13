@@ -49,7 +49,7 @@ public class AccountDetailsController {
 
         String userName = authentication.getName();
         try {
-            return accountDetailsService.editShowCurrency1(userName, currency2);
+            return accountDetailsService.editShowCurrency2(userName, currency2);
         } catch (UsernameNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
