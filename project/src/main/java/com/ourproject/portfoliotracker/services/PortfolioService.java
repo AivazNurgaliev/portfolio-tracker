@@ -11,6 +11,8 @@ import com.ourproject.portfoliotracker.repositories.PortfolioRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -61,7 +63,8 @@ public class PortfolioService {
             throws PortfolioNotFoundException, WrongDataException {
 
         Integer id = accountRepository.findByUserName(userName).getAccountId();
-        List<PortfolioEntity> portfolioEntities = portfolioRepository.findAllByAccountId(id);
+        Pageable pageRequest = PageRequest.of(pageId, 20);
+        List<PortfolioEntity> portfolioEntities = portfolioRepository.findByAccountIdOrderByNameDesc(id, pageRequest);
         if (portfolioEntities == null) {
             throw new PortfolioNotFoundException("Portfolios of id " + id + " not found");
         }
@@ -70,15 +73,7 @@ public class PortfolioService {
         Type listType = new TypeToken<List<PortfolioDTO>>(){}.getType();
         List<PortfolioDTO> portfolioDTOS = modelMapper.map(portfolioEntities, listType);
 
-        int maxAllowedPages = ((portfolioDTOS.size() - 1) / 20) + 1;
-        if (pageId < 1 || pageId > maxAllowedPages) {
-            throw new WrongDataException("pageId cannot be negative or zero or more than allowed: " + pageId);
-        }
-
-        return portfolioDTOS.subList(
-                20 * (pageId - 1),
-                Math.min(20 * pageId, portfolioDTOS.size())
-        );
+        return portfolioDTOS;
     }
 
     public PortfolioDTO getPortfolio(Integer accountId, String name)

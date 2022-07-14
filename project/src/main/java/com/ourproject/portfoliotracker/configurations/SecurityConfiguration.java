@@ -27,7 +27,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
+        http    
                 .authorizeRequests()
                 .mvcMatchers(
                         "/", "/overview", "/register", "/restore")
@@ -44,6 +44,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .logout()
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout")
-                .deleteCookies("JSESSIONID").permitAll();
+                .deleteCookies("JSESSIONID").permitAll()
+
+                .and()
+                .httpBasic();
     }
 }

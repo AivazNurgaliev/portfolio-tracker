@@ -52,7 +52,7 @@ public class PortfolioController {
 
     @GetMapping("/{pageId}")
     public List<PortfolioDTO> getFirst20Portfolio(Authentication authentication,
-                                                  @RequestParam(name = "pageId") Integer pageId) {
+                                                  @PathVariable(name = "pageId") Integer pageId) {
 
         if (authentication == null) {
             return null;

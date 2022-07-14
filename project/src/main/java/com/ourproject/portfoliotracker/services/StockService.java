@@ -9,6 +9,8 @@ import com.ourproject.portfoliotracker.repositories.StockRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
@@ -55,7 +57,8 @@ public class StockService {
             throws PortfolioNotFoundException, StockNotFoundException, WrongDataException {
 
         Integer portfolioId = portfolioService.getPortfolioId(username, portfolioName);
-        List<StockEntity> stockEntities = stockRepository.findAllByPortfolioId(portfolioId);
+        Pageable pageRequest = PageRequest.of(pageId, 20);
+        List<StockEntity> stockEntities = stockRepository.findByPortfolioIdOrderByTicker(portfolioId, pageRequest);
         if (stockEntities == null) {
             throw new StockNotFoundException("Stocks of portfolio id: " + portfolioId + " not found");
         }
@@ -64,16 +67,7 @@ public class StockService {
         Type listType = new TypeToken<List<StockDTO>>(){}.getType();
         List<StockDTO> stockDTOS = modelMapper.map(stockEntities, listType);
 
-        int maxAllowedPages = ((stockDTOS.size() - 1) / 20) + 1;
-
-        if (pageId < 1 || pageId > maxAllowedPages) {
-            throw new WrongDataException("pageId cannot be negative or zero or more than allowed: " + pageId);
-        }
-
-        return stockDTOS.subList(
-                20 * (pageId - 1),
-                Math.min(20 * pageId, stockDTOS.size())
-        );
+        return stockDTOS;
     }
 
     public StockEntity deleteStock(String username, String portfolioName, String stockTicker)

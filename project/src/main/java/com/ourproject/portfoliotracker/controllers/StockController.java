@@ -33,10 +33,10 @@ public class StockController {
         return stockService.addStock(stockDTO);
     }
 
-    @GetMapping("/byId")
+    @GetMapping("/{portfolioName}/{pageId}")
     public List<StockDTO> getFirst20Stocks(Authentication authentication,
-                                           @RequestParam(name = "portfolioName") String portfolioName,
-                                           @RequestParam(name = "pageId") Integer pageId) {
+                                           @PathVariable(name = "portfolioName") String portfolioName,
+                                           @PathVariable(name = "pageId") Integer pageId) {
 
         if (authentication == null) {
             return null;
