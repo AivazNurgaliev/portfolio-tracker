@@ -106,6 +106,8 @@ paths:
                   $ref: '#/components/schemas/AccountEntity'
         '404':
           description: Account Not Found
+        '409':
+          description: Data already exist
 
   /account/email:
     put:
@@ -130,7 +132,8 @@ paths:
                   $ref: '#/components/schemas/AccountEntity'
         '404':
           description: Account Not Found
-
+        '409':
+          description: Data already exist
 
 
   /account/currency1:
@@ -369,6 +372,8 @@ paths:
                   $ref: '#/components/schemas/PortfolioEntity'
         '404':
           description: Account or Portfolio not found
+        '409':
+          description: Data already exist
 
   /portfolio/description:
     put:

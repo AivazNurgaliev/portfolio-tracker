@@ -3,6 +3,7 @@ package com.ourproject.portfoliotracker.controllers;
 import com.ourproject.portfoliotracker.dtos.AccountDRO;
 import com.ourproject.portfoliotracker.dtos.AccountDSO;
 import com.ourproject.portfoliotracker.entities.AccountEntity;
+import com.ourproject.portfoliotracker.exceptions.DataAlreadyExistException;
 import com.ourproject.portfoliotracker.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -87,6 +88,8 @@ public class AccountController {
             return accountService.editUserName(userName, newUserName);
         } catch (UsernameNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (DataAlreadyExistException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
 
@@ -103,6 +106,8 @@ public class AccountController {
             return accountService.editEmail(userName, newEmail);
         } catch (UsernameNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (DataAlreadyExistException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
 

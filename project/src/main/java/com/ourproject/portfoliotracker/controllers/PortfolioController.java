@@ -1,5 +1,6 @@
 package com.ourproject.portfoliotracker.controllers;
 
+import com.ourproject.portfoliotracker.exceptions.DataAlreadyExistException;
 import com.ourproject.portfoliotracker.exceptions.PortfolioNotFoundException;
 import com.ourproject.portfoliotracker.exceptions.WrongDataException;
 import com.ourproject.portfoliotracker.services.AccountService;
@@ -102,6 +103,8 @@ public class PortfolioController {
             return portfolioService.editName(accountId, portfolioName, newName);
         } catch (PortfolioNotFoundException | UsernameNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (DataAlreadyExistException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
 

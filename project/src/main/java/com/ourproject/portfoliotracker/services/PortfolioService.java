@@ -1,6 +1,7 @@
 package com.ourproject.portfoliotracker.services;
 
 import com.ourproject.portfoliotracker.entities.AccountEntity;
+import com.ourproject.portfoliotracker.exceptions.DataAlreadyExistException;
 import com.ourproject.portfoliotracker.exceptions.PortfolioNotFoundException;
 import com.ourproject.portfoliotracker.exceptions.WrongDataException;
 import com.ourproject.portfoliotracker.repositories.AccountRepository;
@@ -108,7 +109,7 @@ public class PortfolioService {
 
     @Transactional
     public PortfolioEntity editName(Integer accountId, String portfolioName, String newName)
-            throws PortfolioNotFoundException {
+            throws PortfolioNotFoundException, DataAlreadyExistException {
 
         PortfolioEntity portfolio = portfolioRepository.findByAccountIdAndName(accountId, portfolioName);
         if (portfolio == null) {
@@ -117,6 +118,9 @@ public class PortfolioService {
             );
         }
 
+        if (portfolioRepository.findByAccountIdAndName(accountId, newName) != null) {
+            throw new DataAlreadyExistException("Portfolio with this name already exist: " + newName);
+        }
         portfolio.setName(newName);
 
         return portfolio;

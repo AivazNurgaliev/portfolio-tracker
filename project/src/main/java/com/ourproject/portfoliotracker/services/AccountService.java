@@ -3,6 +3,7 @@ package com.ourproject.portfoliotracker.services;
 import com.ourproject.portfoliotracker.dtos.AccountDRO;
 import com.ourproject.portfoliotracker.dtos.AccountDSO;
 import com.ourproject.portfoliotracker.entities.AccountEntity;
+import com.ourproject.portfoliotracker.exceptions.DataAlreadyExistException;
 import com.ourproject.portfoliotracker.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -98,11 +99,16 @@ public class AccountService {
     }
 
     @Transactional
-    public AccountEntity editUserName(String userName, String newUserName) {
+    public AccountEntity editUserName(String userName, String newUserName)
+            throws DataAlreadyExistException {
         // FIXME: 18.07.2022 if theres already a new username?
         AccountEntity account = accountRepository.findByUserName(userName);
         if (account == null) {
             throw new UsernameNotFoundException("User " + userName + " not found");
+        }
+
+        if (accountRepository.findByUserName(newUserName) != null) {
+            throw new DataAlreadyExistException("User already exist");
         }
 
         account.setUserName(newUserName);
@@ -111,13 +117,17 @@ public class AccountService {
     }
 
     @Transactional
-    public AccountEntity editEmail(String userName, String newEmail) {
+    public AccountEntity editEmail(String userName, String newEmail)
+            throws DataAlreadyExistException {
 
         AccountEntity account = accountRepository.findByUserName(userName);
         if (account == null) {
             throw new UsernameNotFoundException("User " + userName + " not found");
         }
 
+        if (accountRepository.findByEmail(newEmail) != null) {
+            throw new DataAlreadyExistException("Email already exist");
+        }
         account.setEmail(newEmail);
 
         return account;
