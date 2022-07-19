@@ -682,7 +682,6 @@ paths:
           description: Wrong Data entered
 
 
-
 components:
   schemas:
     AccountEntity:
