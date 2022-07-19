@@ -3,11 +3,11 @@ package com.ourproject.portfoliotracker.controllers;
 import com.ourproject.portfoliotracker.exceptions.PortfolioNotFoundException;
 import com.ourproject.portfoliotracker.exceptions.StockNotFoundException;
 import com.ourproject.portfoliotracker.exceptions.WrongDataException;
-import com.ourproject.portfoliotracker.services.PortfolioService;
 import com.ourproject.portfoliotracker.dtos.StockDTO;
 import com.ourproject.portfoliotracker.entities.StockEntity;
 import com.ourproject.portfoliotracker.services.StockService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.util.Pair;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +21,6 @@ public class StockController {
 
     private final StockService stockService;
 
-    @Autowired
     public StockController(StockService stockService) {
         this.stockService = stockService;
     }
@@ -32,7 +31,7 @@ public class StockController {
     }
 
     @GetMapping("/{portfolioName}/{pageId}")
-    public List<StockDTO> getFirst20Stocks(Authentication authentication,
+    public Pair<Integer, List<StockDTO>> getFirst20Stocks(Authentication authentication,
                                            @PathVariable(name = "portfolioName") String portfolioName,
                                            @PathVariable(name = "pageId") Integer pageId) {
 
@@ -42,7 +41,8 @@ public class StockController {
 
         String username = authentication.getName();
         try {
-            return stockService.getFirst20Stocks(username, portfolioName, pageId);
+            Page<StockDTO> stockDTOs = stockService.getFirst20Stocks(username, portfolioName, pageId);
+            return Pair.of(stockDTOs.getTotalPages(), stockDTOs.getContent());
         } catch (PortfolioNotFoundException | StockNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (WrongDataException e) {

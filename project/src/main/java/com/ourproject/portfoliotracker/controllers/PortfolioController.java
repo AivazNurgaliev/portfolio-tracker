@@ -6,7 +6,8 @@ import com.ourproject.portfoliotracker.services.AccountService;
 import com.ourproject.portfoliotracker.dtos.PortfolioDTO;
 import com.ourproject.portfoliotracker.entities.PortfolioEntity;
 import com.ourproject.portfoliotracker.services.PortfolioService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.util.Pair;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,7 +23,6 @@ public class PortfolioController {
     private final PortfolioService portfolioService;
     private final AccountService accountService;
 
-    @Autowired
     public PortfolioController(PortfolioService portfolioService, AccountService accountService) {
         this.portfolioService = portfolioService;
         this.accountService = accountService;
@@ -51,7 +51,7 @@ public class PortfolioController {
     }
 
     @GetMapping("/{pageId}")
-    public List<PortfolioDTO> getFirst20Portfolio(Authentication authentication,
+    public Pair<Integer, List<PortfolioDTO>> getFirst20Portfolio(Authentication authentication,
                                                   @PathVariable(name = "pageId") Integer pageId) {
 
         if (authentication == null) {
@@ -60,7 +60,8 @@ public class PortfolioController {
 
         String userName = authentication.getName();
         try {
-            return portfolioService.getFirst20Portfolio(userName, pageId);
+            Page<PortfolioDTO> portfolioDTOs = portfolioService.getFirst20Portfolio(userName, pageId);
+            return Pair.of(portfolioDTOs.getTotalPages(), portfolioDTOs.getContent());
         } catch (PortfolioNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (WrongDataException e) {

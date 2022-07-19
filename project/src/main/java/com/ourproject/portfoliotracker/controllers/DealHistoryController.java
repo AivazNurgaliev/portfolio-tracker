@@ -6,7 +6,8 @@ import com.ourproject.portfoliotracker.services.AccountService;
 import com.ourproject.portfoliotracker.dtos.DealHistoryDTO;
 import com.ourproject.portfoliotracker.entities.DealHistoryEntity;
 import com.ourproject.portfoliotracker.services.DealHistoryService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.util.Pair;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,7 +24,6 @@ public class DealHistoryController {
     private final DealHistoryService dealHistoryService;
     private final AccountService accountService;
 
-    @Autowired
     public DealHistoryController(DealHistoryService dealHistoryService, AccountService accountService) {
         this.dealHistoryService = dealHistoryService;
         this.accountService = accountService;
@@ -35,7 +35,7 @@ public class DealHistoryController {
     }
 
     @GetMapping("/{pageId}")
-    public List<DealHistoryDTO> getFirst20Deals(Authentication authentication,
+    public Pair<Integer, List<DealHistoryDTO>> getFirst20Deals(Authentication authentication,
                                                 @PathVariable(name = "pageId") Integer pageId) {
 
         if (authentication == null) {
@@ -45,7 +45,8 @@ public class DealHistoryController {
         String userName = authentication.getName();
         try {
             Integer accountId = accountService.getUserId(userName);
-            return dealHistoryService.getFirst20Deals(accountId, pageId);
+            Page<DealHistoryDTO> dealHistoryDTOs = dealHistoryService.getFirst20Deals(accountId, pageId);
+            return Pair.of(dealHistoryDTOs.getTotalPages(), dealHistoryDTOs.getContent());
         } catch (DealHistoryNotFoundException | UsernameNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (WrongDataException e) {

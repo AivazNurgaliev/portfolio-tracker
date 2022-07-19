@@ -8,13 +8,12 @@ import com.ourproject.portfoliotracker.exceptions.WrongDataException;
 import com.ourproject.portfoliotracker.repositories.StockRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
-import java.util.List;
 
 @Service
 public class StockService {
@@ -22,7 +21,6 @@ public class StockService {
     private final StockRepository stockRepository;
     private final PortfolioService portfolioService;
 
-    @Autowired
     public StockService(StockRepository stockRepository, PortfolioService portfolioService) {
 
         this.stockRepository = stockRepository;
@@ -53,19 +51,19 @@ public class StockService {
         return stockDTO;
     }
 
-    public List<StockDTO> getFirst20Stocks(String username, String portfolioName, Integer pageId)
+    public Page<StockDTO> getFirst20Stocks(String username, String portfolioName, Integer pageId)
             throws PortfolioNotFoundException, StockNotFoundException, WrongDataException {
 
         Integer portfolioId = portfolioService.getPortfolioId(username, portfolioName);
         Pageable pageRequest = PageRequest.of(pageId, 20);
-        List<StockEntity> stockEntities = stockRepository.findByPortfolioIdOrderByTicker(portfolioId, pageRequest);
+        Page<StockEntity> stockEntities = stockRepository.findByPortfolioIdOrderByTicker(portfolioId, pageRequest);
         if (stockEntities == null) {
             throw new StockNotFoundException("Stocks of portfolio id: " + portfolioId + " not found");
         }
 
         ModelMapper modelMapper = new ModelMapper();
-        Type listType = new TypeToken<List<StockDTO>>(){}.getType();
-        List<StockDTO> stockDTOS = modelMapper.map(stockEntities, listType);
+        Type dtoType = new TypeToken<StockDTO>(){}.getType();
+        Page<StockDTO> stockDTOS = stockEntities.map(entity -> modelMapper.map(entity, dtoType));
 
         return stockDTOS;
     }

@@ -10,7 +10,7 @@ import com.ourproject.portfoliotracker.entities.PortfolioEntity;
 import com.ourproject.portfoliotracker.repositories.PortfolioRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.lang.reflect.Type;
-import java.util.List;
 
 @Service
 public class PortfolioService {
@@ -26,7 +25,6 @@ public class PortfolioService {
     private final PortfolioRepository portfolioRepository;
     private final AccountRepository accountRepository;
 
-    @Autowired
     public PortfolioService(PortfolioRepository portfolioRepository, AccountRepository accountRepository) {
         this.portfolioRepository = portfolioRepository;
         this.accountRepository = accountRepository;
@@ -59,19 +57,19 @@ public class PortfolioService {
         return portfolioRepository.save(portfolio);
     }
 
-    public List<PortfolioDTO> getFirst20Portfolio(String userName, Integer pageId)
+    public Page<PortfolioDTO> getFirst20Portfolio(String userName, Integer pageId)
             throws PortfolioNotFoundException, WrongDataException {
 
         Integer id = accountRepository.findByUserName(userName).getAccountId();
         Pageable pageRequest = PageRequest.of(pageId, 20);
-        List<PortfolioEntity> portfolioEntities = portfolioRepository.findByAccountIdOrderByNameDesc(id, pageRequest);
+        Page<PortfolioEntity> portfolioEntities = portfolioRepository.findByAccountIdOrderByNameDesc(id, pageRequest);
         if (portfolioEntities == null) {
             throw new PortfolioNotFoundException("Portfolios of id " + id + " not found");
         }
 
         ModelMapper modelMapper = new ModelMapper();
-        Type listType = new TypeToken<List<PortfolioDTO>>(){}.getType();
-        List<PortfolioDTO> portfolioDTOS = modelMapper.map(portfolioEntities, listType);
+        Type dtoType = new TypeToken<PortfolioDTO>(){}.getType();
+        Page<PortfolioDTO> portfolioDTOS = portfolioEntities.map(entity -> modelMapper.map(entity, dtoType));
 
         return portfolioDTOS;
     }

@@ -7,7 +7,7 @@ import com.ourproject.portfoliotracker.exceptions.WrongDataException;
 import com.ourproject.portfoliotracker.repositories.DealHistoryRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,6 @@ public class DealHistoryService {
 
     private final DealHistoryRepository dealHistoryRepository;
 
-    @Autowired
     public DealHistoryService(DealHistoryRepository dealHistoryRepository) {
         this.dealHistoryRepository = dealHistoryRepository;
     }
@@ -39,19 +38,19 @@ public class DealHistoryService {
         return dealHistoryRepository.save(dealHistory);
     }
 
-    public List<DealHistoryDTO> getFirst20Deals(Integer accountId, Integer pageId)
+    public Page<DealHistoryDTO> getFirst20Deals(Integer accountId, Integer pageId)
             throws DealHistoryNotFoundException, WrongDataException {
 
         Pageable pageRequest = PageRequest.of(pageId, 20);
-        List<DealHistoryEntity> dealHistoryEntities =
+        Page<DealHistoryEntity> dealHistoryEntities =
                 dealHistoryRepository.findByAccountIdOrderByDealDateDesc(accountId, pageRequest);
         if (dealHistoryEntities == null) {
             throw new DealHistoryNotFoundException("deal History of user id: " + accountId + " not found");
         }
 
         ModelMapper modelMapper = new ModelMapper();
-        Type listType = new TypeToken<List<DealHistoryDTO>>(){}.getType();
-        List<DealHistoryDTO> dealHistoryDTOS = modelMapper.map(dealHistoryEntities, listType);
+        Type dtoType = new TypeToken<DealHistoryDTO>(){}.getType();
+        Page<DealHistoryDTO> dealHistoryDTOS = dealHistoryEntities.map(entity -> modelMapper.map(entity, dtoType));
 
         return dealHistoryDTOS;
     }
