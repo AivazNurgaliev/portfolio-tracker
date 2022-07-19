@@ -1,27 +1,28 @@
-package com.ourproject.portfoliotracker.services;
+package com.ourproject.portfoliotracker.utils;
 
-import com.ourproject.portfoliotracker.utils.AuthenticationDetails;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.stereotype.Service;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.stereotype.Component;
 
-@Service
-public class AuthenticationProviderService implements AuthenticationProvider {
+import com.ourproject.portfoliotracker.services.PasswordService;
 
-    private final AuthenticationDetailsService authDetailsService;
+@Component
+public class AuthenticationProviderImpl implements AuthenticationProvider {
+
+    private final UserDetailsService userDetailsService;
 
     private final PasswordService passwordService;
 
-    @Autowired
-    public AuthenticationProviderService(
-            AuthenticationDetailsService authDetailsService,
+    public AuthenticationProviderImpl(
+            UserDetailsService userDetailsService,
             PasswordService passwordService) {
 
-        this.authDetailsService = authDetailsService;
+        this.userDetailsService = userDetailsService;
         this.passwordService = passwordService;
     }
 
@@ -30,14 +31,14 @@ public class AuthenticationProviderService implements AuthenticationProvider {
 
         String login = authentication.getName();
         String password = authentication.getCredentials().toString();
-        AuthenticationDetails authDetails = authDetailsService.loadUserByUsername(login);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(login);
 
-        if (passwordService.validatePassword(password, authDetails.getPassword())) {
+        if (passwordService.validatePassword(password, userDetails.getPassword())) {
 
             return new UsernamePasswordAuthenticationToken(
-                    authDetails.getUsername(),
-                    authDetails.getPassword(),
-                    authDetails.getAuthorities());
+                    userDetails.getUsername(),
+                    userDetails.getPassword(),
+                    userDetails.getAuthorities());
         } else {
             throw new BadCredentialsException("Bad credentials");
         }
@@ -45,7 +46,6 @@ public class AuthenticationProviderService implements AuthenticationProvider {
 
     @Override
     public boolean supports(Class<?> authentication) {
-        return UsernamePasswordAuthenticationToken.class
-                .isAssignableFrom(authentication);
+        return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
     }
 }

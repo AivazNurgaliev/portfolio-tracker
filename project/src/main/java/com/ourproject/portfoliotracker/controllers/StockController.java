@@ -3,11 +3,11 @@ package com.ourproject.portfoliotracker.controllers;
 import com.ourproject.portfoliotracker.exceptions.PortfolioNotFoundException;
 import com.ourproject.portfoliotracker.exceptions.StockNotFoundException;
 import com.ourproject.portfoliotracker.exceptions.WrongDataException;
-import com.ourproject.portfoliotracker.services.PortfolioService;
 import com.ourproject.portfoliotracker.dtos.StockDTO;
 import com.ourproject.portfoliotracker.entities.StockEntity;
 import com.ourproject.portfoliotracker.services.StockService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.util.Pair;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -20,12 +20,9 @@ import java.util.List;
 public class StockController {
 
     private final StockService stockService;
-    private final PortfolioService portfolioService;
 
-    @Autowired
-    public StockController(StockService stockService, PortfolioService portfolioService) {
+    public StockController(StockService stockService) {
         this.stockService = stockService;
-        this.portfolioService = portfolioService;
     }
 
     @PostMapping
@@ -33,10 +30,10 @@ public class StockController {
         return stockService.addStock(stockDTO);
     }
 
-    @GetMapping("/byId")
-    public List<StockDTO> getFirst20Stocks(Authentication authentication,
-                                           @RequestParam(name = "portfolioName") String portfolioName,
-                                           @RequestParam(name = "pageId") Integer pageId) {
+    @GetMapping("/{portfolioName}/{pageId}")
+    public Pair<Integer, List<StockDTO>> getFirst20Stocks(Authentication authentication,
+                                           @PathVariable(name = "portfolioName") String portfolioName,
+                                           @PathVariable(name = "pageId") Integer pageId) {
 
         if (authentication == null) {
             return null;
@@ -44,7 +41,8 @@ public class StockController {
 
         String username = authentication.getName();
         try {
-            return stockService.getFirst20Stocks(username, portfolioName, pageId);
+            Page<StockDTO> stockDTOs = stockService.getFirst20Stocks(username, portfolioName, pageId);
+            return Pair.of(stockDTOs.getTotalPages(), stockDTOs.getContent());
         } catch (PortfolioNotFoundException | StockNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (WrongDataException e) {
@@ -80,7 +78,6 @@ public class StockController {
 
         String username = authentication.getName();
         try {
-            StockDTO stockDTO = stockService.getStock(username, portfolioName, stockTicker);
             return  stockService.deleteStock(username, portfolioName, stockTicker);
         } catch (PortfolioNotFoundException | StockNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());

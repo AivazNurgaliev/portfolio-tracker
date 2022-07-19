@@ -2,16 +2,13 @@ package com.ourproject.portfoliotracker.controllers;
 
 import com.ourproject.portfoliotracker.dtos.AccountDRO;
 import com.ourproject.portfoliotracker.entities.AccountDetailsEntity;
-import com.ourproject.portfoliotracker.entities.AccountEntity;
 import com.ourproject.portfoliotracker.services.AccountDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.sql.Date;
 
@@ -21,7 +18,6 @@ public class AccountDetailsController {
 
     private final AccountDetailsService accountDetailsService;
 
-    @Autowired
     public AccountDetailsController(AccountDetailsService accountDetailsService) {
         this.accountDetailsService = accountDetailsService;
     }

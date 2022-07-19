@@ -7,11 +7,12 @@ import com.ourproject.portfoliotracker.exceptions.WrongDataException;
 import com.ourproject.portfoliotracker.repositories.DealHistoryRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,7 +21,6 @@ public class DealHistoryService {
 
     private final DealHistoryRepository dealHistoryRepository;
 
-    @Autowired
     public DealHistoryService(DealHistoryRepository dealHistoryRepository) {
         this.dealHistoryRepository = dealHistoryRepository;
     }
@@ -38,27 +38,21 @@ public class DealHistoryService {
         return dealHistoryRepository.save(dealHistory);
     }
 
-    public List<DealHistoryDTO> getFirst20Deals(Integer accountId, Integer pageId)
+    public Page<DealHistoryDTO> getFirst20Deals(Integer accountId, Integer pageId)
             throws DealHistoryNotFoundException, WrongDataException {
 
-        List<DealHistoryEntity> dealHistoryEntities = dealHistoryRepository.findAllByAccountId(accountId);
+        Pageable pageRequest = PageRequest.of(pageId, 20);
+        Page<DealHistoryEntity> dealHistoryEntities =
+                dealHistoryRepository.findByAccountIdOrderByDealDateDesc(accountId, pageRequest);
         if (dealHistoryEntities == null) {
             throw new DealHistoryNotFoundException("deal History of user id: " + accountId + " not found");
         }
 
         ModelMapper modelMapper = new ModelMapper();
-        Type listType = new TypeToken<List<DealHistoryDTO>>(){}.getType();
-        List<DealHistoryDTO> dealHistoryDTOS = modelMapper.map(dealHistoryEntities, listType);
+        Type dtoType = new TypeToken<DealHistoryDTO>(){}.getType();
+        Page<DealHistoryDTO> dealHistoryDTOS = dealHistoryEntities.map(entity -> modelMapper.map(entity, dtoType));
 
-        int maxAllowedPages = ((dealHistoryDTOS.size() - 1) / 20) + 1;
-        if (pageId < 1 || pageId > maxAllowedPages) {
-            throw new WrongDataException("pageId cannot be negative or zero or more than allowed: " + pageId);
-        }
-
-        return dealHistoryDTOS.subList(
-                20 * (pageId - 1),
-                Math.min(20 * pageId, dealHistoryDTOS.size())
-        );
+        return dealHistoryDTOS;
     }
 
     //dealType, 0 - chosen from List, 1 - all,

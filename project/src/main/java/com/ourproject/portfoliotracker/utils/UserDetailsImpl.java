@@ -7,13 +7,13 @@ import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-public class AuthenticationDetails implements UserDetails {
+public class UserDetailsImpl implements UserDetails {
 
-    final private String username;
-    final private String password;
+    private final String username;
+    private final String password;
     private final List<GrantedAuthority> authorities;
     
-    public AuthenticationDetails(String username, String password,
+    public UserDetailsImpl(String username, String password,
         List<? extends GrantedAuthority> authorities) {
         this.username = username;
         this.password = password;
