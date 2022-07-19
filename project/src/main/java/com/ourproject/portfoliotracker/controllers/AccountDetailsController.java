@@ -1,6 +1,8 @@
 package com.ourproject.portfoliotracker.controllers;
 
+import com.ourproject.portfoliotracker.dtos.AccountDRO;
 import com.ourproject.portfoliotracker.entities.AccountDetailsEntity;
+import com.ourproject.portfoliotracker.entities.AccountEntity;
 import com.ourproject.portfoliotracker.services.AccountDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.sql.Date;
 
 @RestController
 @RequestMapping("/account")
@@ -49,7 +52,7 @@ public class AccountDetailsController {
 
         String userName = authentication.getName();
         try {
-            return accountDetailsService.editShowCurrency1(userName, currency2);
+            return accountDetailsService.editShowCurrency2(userName, currency2);
         } catch (UsernameNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
@@ -70,5 +73,28 @@ public class AccountDetailsController {
         } catch (UsernameNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
+    }
+
+    @PutMapping("/loginDate")
+    public AccountDetailsEntity putLastLoginDate(Authentication authentication,
+                                                 @RequestBody Date date) {
+
+        if (authentication == null) {
+            return null;
+        }
+
+        String userName = authentication.getName();
+        try {
+            return accountDetailsService.editLastLoginDate(userName, date);
+        } catch (UsernameNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @PostMapping("/addDetails")
+    public AccountDetailsEntity addAccountDetails(Authentication authentication,
+                                                  @RequestBody AccountDRO accountDRO) {
+
+        return accountDetailsService.addAccountDetails(accountDRO);
     }
 }
