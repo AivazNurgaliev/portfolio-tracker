@@ -244,9 +244,9 @@ paths:
     post:
       tags:
         - account details
-      description: Changes last login date
+      description: Adds new account
       requestBody:
-        description: new login date
+        description: AccountDRO
         required: true
         content:
           application/json:
