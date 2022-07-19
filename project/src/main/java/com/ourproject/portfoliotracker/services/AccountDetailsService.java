@@ -31,7 +31,7 @@ public class AccountDetailsService {
         AccountDetailsEntity accountDetails = new AccountDetailsEntity();
         AccountEntity account = accountRepository.findByUserName(accountDRO.getUserName());
         if (account == null) {
-            throw new UsernameNotFoundException("User " + account.getUserName() + " not found");
+            throw new UsernameNotFoundException("User " + accountDRO.getUserName() + " not found");
         }
         accountDetails.setAccountId(account.getAccountId());
         accountDetails.setShowCurrency1(accountDRO.getShowCurrency1());

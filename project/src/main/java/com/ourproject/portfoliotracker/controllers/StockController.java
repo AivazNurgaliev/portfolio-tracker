@@ -20,12 +20,10 @@ import java.util.List;
 public class StockController {
 
     private final StockService stockService;
-    private final PortfolioService portfolioService;
 
     @Autowired
-    public StockController(StockService stockService, PortfolioService portfolioService) {
+    public StockController(StockService stockService) {
         this.stockService = stockService;
-        this.portfolioService = portfolioService;
     }
 
     @PostMapping
@@ -80,7 +78,6 @@ public class StockController {
 
         String username = authentication.getName();
         try {
-            StockDTO stockDTO = stockService.getStock(username, portfolioName, stockTicker);
             return  stockService.deleteStock(username, portfolioName, stockTicker);
         } catch (PortfolioNotFoundException | StockNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
