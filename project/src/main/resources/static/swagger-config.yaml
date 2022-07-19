@@ -648,20 +648,19 @@ paths:
         '404':
           description: Portfolio or Stock Not Found
 
-  /stock/byId:
+  /stock/{portfolioName}/{pageId}:
     get:
       tags:
         - stock
       description: Show 20 first stocks
       parameters:
-        - in: query
+        - in: path
           name: portfolioName
           schema:
             type: string
           required: true
           description: The portfolio's name
-
-        - in: query
+        - in: path
           name: pageId
           schema:
             type: integer
@@ -681,11 +680,6 @@ paths:
           description: Portfolio or Stock Not Found
         '409':
           description: Wrong Data entered
-
-
-
-
-
 
 
 
