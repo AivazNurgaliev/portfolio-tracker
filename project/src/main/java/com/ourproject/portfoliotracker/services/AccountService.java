@@ -99,7 +99,7 @@ public class AccountService {
 
     @Transactional
     public AccountEntity editUserName(String userName, String newUserName) {
-
+        // FIXME: 18.07.2022 if theres already a new username?
         AccountEntity account = accountRepository.findByUserName(userName);
         if (account == null) {
             throw new UsernameNotFoundException("User " + userName + " not found");
