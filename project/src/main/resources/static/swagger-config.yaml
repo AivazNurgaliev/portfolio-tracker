@@ -1,0 +1,871 @@
+openapi: 3.0.0
+info:
+  description: "API for Portfolio tracker project"
+  version: "0.0.0"
+  title: "Portfolio tracker"
+
+servers:
+  - url: http://localhost:8080
+    description: test server
+
+paths:
+  /account:
+    get:
+      tags:
+        - account
+      description: Returns single account (AccountDSO)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountDSO'
+        '404':
+          description: Account Not Found
+    post:
+      tags:
+        - account
+      description: Creates a new account. Returns redirect to login (JSON)
+      requestBody:
+        description: Account to add.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountDRO'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+    delete:
+      tags:
+        - account
+      description: deletes an account
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountEntity'
+        '404':
+          description: Account Not Found
+
+  /account/password:
+    put:
+      tags:
+        - account
+      description: Changes password. Returns account entity.
+      requestBody:
+        description: new Password as a String.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountEntity'
+        '404':
+          description: Account Not Found
+
+  /account/username:
+    put:
+      tags:
+        - account
+      description: Changes username. Returns account entity.
+      requestBody:
+        description: new username as a String.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountEntity'
+        '404':
+          description: Account Not Found
+
+  /account/email:
+    put:
+      tags:
+        - account
+      description: Changes email. Returns account entity.
+      requestBody:
+        description: new email as a String.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountEntity'
+        '404':
+          description: Account Not Found
+
+
+
+  /account/currency1:
+    put:
+      tags:
+        - account details
+      description: Changes currency1
+      requestBody:
+        description: currency1
+        required: true
+        content:
+          application/json:
+            schema:
+              type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountDetailsEntity'
+        '404':
+          description: Account not found
+
+  /account/currency2:
+    put:
+      tags:
+        - account details
+      description: Changes currency2
+      requestBody:
+        description: currency2
+        required: true
+        content:
+          application/json:
+            schema:
+              type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountDetailsEntity'
+        '404':
+          description: Account not found
+
+  /account/subscriptionDate:
+    put:
+      tags:
+        - account details
+      description: Changes subscription date
+      requestBody:
+        description: startDate
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: string
+                  format: date-time
+                endDate:
+                  type: string
+                  format: date-time
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountDetailsEntity'
+        '404':
+          description: Account not found
+
+  /account/loginDate:
+    put:
+      tags:
+        - account details
+      description: Changes last login date
+      requestBody:
+        description: AccountDRO
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  type: string
+                  format: date
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountDetailsEntity'
+        '404':
+          description: Account not found
+
+  /account/addDetails:
+    post:
+      tags:
+        - account details
+      description: Changes last login date
+      requestBody:
+        description: new login date
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/AccountDRO'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountDetailsEntity'
+
+
+
+
+
+
+
+  /portfolio:
+    get:
+      tags:
+        - portfolio
+      description: Returns portfolio (PortfolioDTO)
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+          required: true
+          description: Name of the portfolio
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PortfolioDTO'
+        '404':
+          description: Account or Portfolio not found
+    post:
+      tags:
+        - portfolio
+      description: Adds a portfolio
+      requestBody:
+        description: PortfolioDTO.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/PortfolioDTO'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PortfolioEntity'
+
+    delete:
+      tags:
+        - portfolio
+      description: Deletes portfolio
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+          required: true
+          description: Name of the portfolio
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PortfolioEntity'
+        '404':
+          description: Account or Portfolio not found
+
+
+  /portfolio/name:
+    put:
+      tags:
+        - portfolio
+      description: Changes portfolio's name
+      parameters:
+        - in: query
+          name: portfolioName
+          schema:
+            type: string
+          required: true
+          description: Currrent name of the portfolio
+        - in: query
+          name: newName
+          schema:
+            type: string
+          required: true
+          description: New name of the portfolio
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PortfolioEntity'
+        '404':
+          description: Account or Portfolio not found
+
+  /portfolio/description:
+    put:
+      tags:
+        - portfolio
+      description:  Changes portfolio's description
+      parameters:
+        - in: query
+          name: portfolioName
+          schema:
+            type: string
+          required: true
+          description: Currrent name of the portfolio
+        - in: query
+          name: newDescription
+          schema:
+            type: string
+          required: true
+          description: New description of the portfolio
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PortfolioEntity'
+        '404':
+          description: Account or Portfolio not found
+
+  /portfolio/{pageId}:
+    get:
+      tags:
+        - portfolio
+      description: Shows 20 first portfolios
+      parameters:
+        - in: path
+          name: pageId
+          schema:
+            type: integer
+            format: int32
+          required: true
+          description: Id of page
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PortfolioDTO'
+        '404':
+          description: Portfolio not found
+        '409':
+          description: Wrong data entered
+
+
+
+
+
+
+  /deal:
+    get:
+      tags:
+        - deal
+      description: Shows 20 first deals
+      parameters:
+        - in: query
+          name: pageId
+          schema:
+            type: integer
+            format: int32
+          required: true
+          description: Id of page
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DealHistoryDTO'
+        '404':
+          description: Account or Deal History Not Found
+        '409':
+          description: Wrong Data entered
+
+    post:
+      tags:
+        - deal
+      description: Adds Deal History to Account
+      requestBody:
+        description: DealHistoryDTO
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/DealHistoryDTO'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DealHistoryEntity'
+        '404':
+          description: Account or Deal History Not Found
+        '409':
+          description: Wrong Data entered
+
+    delete:
+      tags:
+        - deal
+      description: Deletes a deal history from account
+      parameters:
+        - in: query
+          name: dealDatesList
+          schema:
+            type: array
+            items:
+              type: string
+              format: date-time
+          required: true
+          description: The list of dates
+        - in: query
+          name: deleteAll
+          schema:
+            type: boolean
+          required: true
+          description: 0 - delete from List, 1 - delete All
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DealHistoryEntity'
+        '404':
+          description: Account or Deal History Not Found
+        '409':
+          description: Wrong Data entered
+
+
+
+
+
+
+
+
+  /stock:
+    get:
+      tags:
+        - stock
+      description: Delete a stock
+      parameters:
+        - in: query
+          name: portfolioName
+          schema:
+            type: string
+          required: true
+          description: The portfolio's name
+
+        - in: query
+          name: stockTicker
+          schema:
+            type: string
+          required: true
+          description: stockTicker
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StockDTO'
+        '404':
+          description: Portfolio or Stock Not Found
+
+    post:
+      tags:
+        - stock
+      description: Add a stock
+      requestBody:
+        description: StockDTO
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StockDTO'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StockEntity'
+
+    delete:
+      tags:
+        - stock
+      description: Delete a stock
+      parameters:
+        - in: query
+          name: portfolioName
+          schema:
+            type: string
+          required: true
+          description: The portfolio's name
+
+        - in: query
+          name: stockTicker
+          schema:
+            type: string
+          required: true
+          description: stockTicker
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StockEntity'
+        '404':
+          description: Portfolio or Stock Not Found
+
+    put:
+      tags:
+        - stock
+      description: Changes stock amount
+      parameters:
+        - in: query
+          name: portfolioName
+          schema:
+            type: string
+          required: true
+          description: The portfolio's name
+
+        - in: query
+          name: stockTicker
+          schema:
+            type: string
+          required: true
+          description: stockTicker
+
+        - in: query
+          name: newAmount
+          schema:
+            type: string
+          required: true
+          description: new amount of stocks
+
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StockDTO'
+        '404':
+          description: Portfolio or Stock Not Found
+
+  /stock/byId:
+    get:
+      tags:
+        - stock
+      description: Show 20 first stocks
+      parameters:
+        - in: query
+          name: portfolioName
+          schema:
+            type: string
+          required: true
+          description: The portfolio's name
+
+        - in: query
+          name: pageId
+          schema:
+            type: integer
+            format: int32
+          required: true
+          description: Id of a page
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StockDTO'
+        '404':
+          description: Portfolio or Stock Not Found
+        '409':
+          description: Wrong Data entered
+
+
+
+
+
+
+
+
+components:
+  schemas:
+    AccountEntity:
+      type: object
+      properties:
+        accountId:
+          type: integer
+          format: int32
+        userName:
+          type: string
+        pass:
+          type: string
+        email:
+          type: string
+        registrationDate:
+          type: string
+          format: date-time
+        accountDetailsByAccountId:
+          $ref: '#/components/schemas/AccountDetailsEntity'
+        dealHistoriesByAccountId:
+          $ref: '#/components/schemas/DealHistoryEntity'
+        portfoliosByAccountId:
+          $ref: '#/components/schemas/PortfolioEntity'
+
+    AccountDetailsEntity:
+      type: object
+      properties:
+        accountId:
+          type: integer
+          format: int32
+        lastLoginDate:
+          type: string
+          format: date-time
+        subscriptionStartDate:
+          type: string
+          format: date-time
+        subscriptionEndDate:
+          type: string
+          format: date-time
+        showCurrency1:
+          type: string
+        showCurrency2:
+          type: string
+
+    DealHistoryEntity:
+      type: object
+      properties:
+        accountId:
+          type: integer
+          format: int32
+        dealId:
+          type: integer
+          format: int32
+        ticker:
+          type: string
+        amount:
+          type: integer
+          format: int32
+        stockPrice:
+          type: integer
+          format: int32
+        dealDate:
+          type: string
+          format: date-time
+        dealType:
+          type: string
+          enum:
+            - BUY
+            - SELL
+            - DIV_COUP
+        currency:
+          type: string
+
+    PortfolioEntity:
+      type: object
+      properties:
+        accountId:
+          type: integer
+          format: int32
+        portfolioId:
+          type: integer
+          format: int32
+        name:
+          type: string
+        description:
+          type: string
+
+    StockEntity:
+      type: object
+      properties:
+        portfolioId:
+          type: integer
+          format: int32
+        stockId:
+          type: integer
+          format: int32
+        ticker:
+          type: string
+        amount:
+          type: integer
+          format: int32
+
+    PortfolioDTO:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+
+    StockDTO:
+      type: object
+      properties:
+        ticker:
+          type: string
+        description:
+          type: integer
+          format: int32
+
+    DealHistoryDTO:
+      type: object
+      properties:
+        ticker:
+          type: string
+        amount:
+          type: integer
+          format: int32
+        stockPrice:
+          type: integer
+          format: int32
+        dealDate:
+          type: string
+          format: date-time
+        dealType:
+          type: string
+          enum:
+            - BUY
+            - SELL
+            - DIV_COUP
+        currency:
+          type: string
+
+    AccountDRO:
+      type: object
+      properties:
+        userName:
+          type: string
+        email:
+          type: string
+        pass:
+          type: string
+        showCurrency1:
+          type: string
+        showCurrency2:
+          type: string
+
+    AccountDSO:
+      type: object
+      properties:
+        userName:
+          type: string
+        email:
+          type: string
+        registrationDate:
+          type: string
+          format: date-time
+        lastLoginDate:
+          type: string
+          format: date-time
+        subscriptionStartDate:
+          type: string
+          format: date-time
+        subscriptionEndDate:
+          type: string
+          format: date-time
+        showCurrency1:
+          type: string
+        showCurrency2:
+          type: string
+

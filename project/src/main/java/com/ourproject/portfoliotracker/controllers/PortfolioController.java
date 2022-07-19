@@ -56,6 +56,8 @@ public class PortfolioController {
         }
     }
 
+    // FIXME: 13.07.2022 mapping param is a pathvariable not a requestparam
+    // FIXME: 13.07.2022 add to markdown file url to swagger doc
     @GetMapping("/{pageId}")
     public List<PortfolioDTO> getFirst20Portfolio(Authentication authentication,
                                                   @RequestParam(name = "pageId") Integer pageId) {
